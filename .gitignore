@@ -1,5 +1,5 @@
-!**/data/tomcat/logs/
-!**/data/tomcat/work/
+**/data/tomcat/logs/
+**/data/tomcat/work/
 HELP.md
 target/
 private/
