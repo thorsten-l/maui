@@ -10,14 +10,46 @@
 
     <div class="container">
       <h1 style="margin-top: 0.5em; margin-bottom: 1em;"><span th:text="#{application}" th:remove="tags">application</span>: <span th:text='${mauiApplication.name}' th:remove="tags"></span></h1>
-      <table class="table table-striped">
-        <tbody>
-          <tr><th width='25%'><span th:text="#{name}" th:remove="tags">name</span></th><td th:text="${mauiApplication.name}"></td></tr>
-          <tr><th width='25%'><span th:text="#{description}" th:remove="tags">description</span></th><td th:text="${mauiApplication.description}"></td></tr>
-          <tr><th width='25%'><span th:text="#{base_topic}" th:remove="tags">base_topic</span></th><td th:text="${mauiApplication.baseTopic}"></td></tr>
-          <tr><th width='25%'><span th:text="#{expiration_date}" th:remove="tags">expiration_date</span></th><td th:text="${#dates.format(mauiApplication.expirationDate, 'yyyy-MM-dd')}"></td></tr>
-        </tbody>
-      </table>
+
+      <form th:action="@{/application/update}" th:object="${mauiApplication}" th:method="POST">
+        <table class="table table-striped">
+          <tbody>
+            <tr>
+              <th width='15%'>Id</th>
+              <td><input type="text" class="form-control" th:field="*{id}" readonly="true"/></td>
+            </tr>
+            <tr>
+              <th width='15%'><span th:text="#{name}" th:remove="tags">name</span></th>
+              <td><input type="text" class="form-control" th:field="*{name}"/></td>
+            </tr>
+            <tr>
+              <th width='15%'><span th:text="#{description}" th:remove="tags">description</span></th>
+              <td><input type="text" class="form-control" th:field="*{description}"/></td>
+            </tr>
+            <tr>
+              <th width='15%'><span th:text="#{base_topic}" th:remove="tags">base_topic</span></th>
+              <td><input type="text" class="form-control" th:field="*{baseTopic}"/></td>
+            </tr>
+            <tr>
+              <th width='15%'><span th:text="#{expiration_date}" th:remove="tags">expiration_date</span></th>
+              <td>
+                <div class="input-group date" id="datepicker">
+                  <input type="text" class="form-control" id="expiration_date" th:value="${#dates.format(mauiApplication.expirationDate, 'yyyy-MM-dd')}" />
+                  <span class="input-group-append">
+                    <span class="input-group-text bg-light d-block">
+                      <i class="mdi mdi-calendar-month"></i>
+                    </span>
+                  </span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="d-flex justify-content-end">
+          <button type="reset" class="btn btn-secondary me-2">Reset</button>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </form>
 
       <h2 style="margin-top: 1em;">
         <button th:if="${mauiOwnerOrManager}" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#createTopicModal">
@@ -107,8 +139,10 @@
           <form th:action="@{/topic/create}" th:method="POST">
             <div class="modal-body">
               <p id="modalContent">Create a new sub topic for <tt>'<span th:text="${mauiApplication.baseTopic}" th:remove="tags"></span>&lt;sub topic&gt;'</tt></p>
-              <label for="subTopicId" class="col-form-label">Sub Topic</label>
-              <input type="text" class="form-control" id="subTopicId" placeholder="/state"/>
+              <label for="formApplicationId" class="col-form-label">Application Id</label>
+              <input type="text" class="form-control" id="formApplicationId" th:value="${mauiApplication.id}" readonly="true">
+              <label for="formSubTopicId" class="col-form-label">Sub Topic</label>
+              <input type="text" class="form-control" id="formSubTopicId" placeholder="/state"/>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -122,5 +156,23 @@
     <!-- END: create topic dialog -->
 
     <div th:replace="~{fragments::mauiFooter}"></div>
+
+    <script>
+      $(document).ready(function () {
+
+        var today = new Date();
+        var twoYearsFromNow = new Date();
+        twoYearsFromNow.setFullYear(today.getFullYear() + 2);
+
+        $('#datepicker').datepicker({
+          format: 'yyyy-mm-dd',
+          startDate: today,
+          endDate: twoYearsFromNow,
+          todayHighlight: true,
+          autoclose: true
+        });
+      });
+    </script>
+
   </body>
 </html>

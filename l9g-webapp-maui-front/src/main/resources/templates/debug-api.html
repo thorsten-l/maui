@@ -9,17 +9,44 @@
     <div th:replace="~{fragments::mauiNavbar}"></div>
 
     <div class="container">
-      
+
       <h1>Debug-API</h1>      
 
       <ul>
         <li><a target='_blank' href="/maui-api/application-permissions">/maui-api/application-permissions</a></li>
         <li><a target='_blank' href="/maui-api/person-permissions">/maui-api/person-permissions</a></li>
       </ul>
-      
+
     </div>
 
+    <section class="container">
+      <h2 class="py-2">Datepicker in Bootstrap 5</h2>
+      <form class="row">
+        <label for="date" class="col-1 col-form-label">Date</label>
+        <div class="col-5">
+          <div class="input-group date" id="datepicker">
+            <input type="text" class="form-control" id="date"/>
+            <span class="input-group-append">
+              <span class="input-group-text bg-light d-block">
+                <i class="mdi mdi-calendar-month"></i>
+              </span>
+            </span>
+          </div>
+        </div>
+      </form>
+    </section>
 
     <div th:replace="~{fragments::mauiFooter}"></div>
+
+    <script>
+      $(document).ready(function () {
+        $('#datepicker').datepicker({
+          format: 'yyyy-mm-dd',
+          todayHighlight: true,
+          autoclose: true
+        });
+      });
+    </script>
+
   </body>
 </html>

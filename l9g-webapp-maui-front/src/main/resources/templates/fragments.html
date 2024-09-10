@@ -10,6 +10,7 @@
       <meta charset="UTF-8"></meta>
       <meta name="viewport" content="width=device-width, initial-scale=1" ></meta>
       <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" ></link>
+      <link th:rel="stylesheet" th:href="@{/webjars/bootstrap-datepicker/css/bootstrap-datepicker.min.css}" ></link>
       <link th:rel="stylesheet" th:href="@{/webjars/mdi__font/css/materialdesignicons.min.css}"></link>  
       <link th:rel="icon" type="image/png" sizes="16x16" th:href="@{/icons/favicon-16x16.png}"/>
       <link th:rel="icon" type="image/png" sizes="32x32" th:href="@{/icons/favicon-32x32.png}"/>
@@ -39,6 +40,8 @@
 
     <div th:fragment="mauiFooter" th:remove="tag">
       <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+      <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+      <script th:src="@{/webjars/bootstrap-datepicker/js/bootstrap-datepicker.min.js}"></script>
       <div th:if="${mauiDebugOidc}" th:remove="tags">
         <div style="background: #e0e0e0; padding: 1em; position: fixed; bottom: 0; width: 100%; text-align: left;">
           <a style="margin-left: 2em" target="_blank" th:href="@{/debug-oidc}">Debug-OIDC</a> |
