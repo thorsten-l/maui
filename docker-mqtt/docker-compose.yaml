@@ -1,0 +1,40 @@
+services:
+
+  mosquitto-go-auth:
+    image: mosquitto-go-auth
+    container_name: mosquitto-go-auth
+    ports:
+      - "1883:1883"
+      - "8883:8883"
+    volumes:
+      - ./mosquitto/etc/mosquitto.conf:/etc/mosquitto/mosquitto.conf
+      - ./mosquitto/etc/conf.d:/mosquitto/conf.d
+      - ./mosquitto/var:/var/lib/mosquitto
+      - ./mosquitto/log:/var/log/mosquitto
+    restart: always
+    depends_on:
+      psqldb:
+        condition: service_healthy
+
+  psqldb:
+    image: postgres:16
+    restart: always
+    container_name: psqldb
+    environment:
+      - POSTGRES_PASSWORD=psqldb
+      - POSTGRES_USER=psqldb
+      - POSTGRES_DB=psqldb
+      - PGLOG=postgresql:stdout
+    ports:
+      - "15432:5432"
+    volumes:
+      - ./psqldb:/var/lib/postgresql/data
+      - type: tmpfs
+        target: /var/lib/postgresql/data/pg_stat_tmp
+        tmpfs:
+          size: 268435456
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U psqldb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5

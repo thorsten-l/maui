@@ -2,6 +2,10 @@
 !**/data/tomcat/work/
 HELP.md
 target/
+private/
+docker-mqtt/psqldb/
+docker-mqtt/mosquitto/var/
+docker-mqtt/mosquitto/log/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
