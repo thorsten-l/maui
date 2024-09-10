@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <title th:replace="~{fragments::mauiHeader(title='MAUI Application')}">MAUI</title>
+  </head>
+
+  <body>
+    <div th:replace="~{fragments::mauiNavbar}"></div>
+
+    <div class="container">
+      <h1 style="margin-top: 0.5em; margin-bottom: 1em;"><span th:text="#{application}" th:remove="tags">application</span>: <span th:text='${mauiApplication.name}' th:remove="tags"></span></h1>
+      <table class="table table-striped">
+        <tbody>
+          <tr><th width='25%'><span th:text="#{name}" th:remove="tags">name</span></th><td th:text="${mauiApplication.name}"></td></tr>
+          <tr><th width='25%'><span th:text="#{description}" th:remove="tags">description</span></th><td th:text="${mauiApplication.description}"></td></tr>
+          <tr><th width='25%'><span th:text="#{base_topic}" th:remove="tags">base_topic</span></th><td th:text="${mauiApplication.baseTopic}"></td></tr>
+          <tr><th width='25%'><span th:text="#{expiration_date}" th:remove="tags">expiration_date</span></th><td th:text="${#dates.format(mauiApplication.expirationDate, 'yyyy-MM-dd')}"></td></tr>
+        </tbody>
+      </table>
+
+      <h2 style="margin-top: 1em;">
+        <button th:if="${mauiOwnerOrManager}" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#createTopicModal">
+          <i class="mdi mdi-plus-thick"></i>
+        </button>
+        <span th:text="#{topics}" th:remove="tags">topics</span>
+      </h2>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Topics</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="entry : ${mauiApplication.topics}">
+            <td>
+              <span th:text="${mauiApplication.baseTopic}"></span><b><span th:text="${entry.subTopic}"></span></b>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 style="margin-top: 1em;">
+        <a th:if="${mauiOwnerOrManager}" class="btn btn-dark" 
+           th:href="@{/}">
+          <span class="mdi mdi-plus-thick"></span>
+        </a>  
+        <span th:text="#{clients}" th:remove="tags">clients</span>
+      </h2>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th><span th:text="#{username}" th:remove="tags">username</span></th>
+            <th><span th:text="#{name}" th:remove="tags">name</span></th>
+            <th><span th:text="#{description}" th:remove="tags">description</span></th>
+            <th><span th:text="#{active}" th:remove="tags">active</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="entry : ${mauiApplication.clients}">
+            <td width='25%' th:text="${entry.username}"></td>
+            <td width='25%' th:text="${entry.name}"></td>
+            <td th:text="${entry.description}"></td>
+            <td width='5%' th:text="#{${entry.active}}"></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div th:if="${mauiOwnerOrManager}" th:remove="tags">
+        <h2 style="margin-top: 1em;">
+          <a class="btn btn-dark" 
+             th:href="@{/}">
+            <span class="mdi mdi-plus-thick"></span>
+          </a>  
+          <span th:text="#{coworker}" th:remove="tags">coworker</span>
+        </h2>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th><span th:text="#{firstname}" th:remove="tags">firstname</span></th>
+              <th><span th:text="#{lastname}" th:remove="tags">lastname</span></th>
+              <th><span th:text="#{email}" th:remove="tags">email</span></th>
+              <th><span th:text="#{access}" th:remove="tags">access</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="entry : ${mauiPersonPermissions}">
+              <td th:text="${entry.person.firstname}"></td>
+              <td th:text="${entry.person.lastname}"></td>
+              <td th:text="${entry.person.email}"></td>
+              <td th:text="#{'application_permissions.' + ${entry.permissions}}"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- START: create topic dialog -->
+
+    <div class="modal fade" id="createTopicModal" tabindex="-1" aria-labelledby="createTopicModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="createTopicModalLabel">Create topic</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form th:action="@{/topic/create}" th:method="POST">
+            <div class="modal-body">
+              <p id="modalContent">Create a new sub topic for <tt>'<span th:text="${mauiApplication.baseTopic}" th:remove="tags"></span>&lt;sub topic&gt;'</tt></p>
+              <label for="subTopicId" class="col-form-label">Sub Topic</label>
+              <input type="text" class="form-control" id="subTopicId" placeholder="/state"/>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-danger">Create</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- END: create topic dialog -->
+
+    <div th:replace="~{fragments::mauiFooter}"></div>
+  </body>
+</html>

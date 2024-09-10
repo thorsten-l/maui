@@ -1,0 +1,92 @@
+# Copyright 2024 Thorsten Ludewig (t.ludewig@gmail.com).
+# 
+# Licensed under the Apache License, Version 2.0 (the "License")
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+spring:
+
+  profiles:
+    active: default
+
+  application:
+    name: sonia-webapp-fisres
+
+  output:
+    ansi:
+      enabled: ALWAYS
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwks-uri: https://id.dev.sonia.de/realms/dev/protocol/openid-connect/certs
+
+#  main:
+#    banner-mode: off
+#    # web-application-type: none
+
+  datasource:
+    url: "jdbc:postgresql://localhost:15432/psqldb?currentSchema=public&serverTimezone=UTC"
+    username: psqldb
+    password: psqldb
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+
+logging:
+  pattern:
+    console: "%date{yyyy-MM-dd HH:mm:ss} %magenta([%thread]) %highlight(%-5level) %logger:%line - %yellow(%msg %n)"
+  level:
+    l9g: TRACE
+    root: INFO
+    org.quartz: OFF
+
+server:
+  port: 8181
+  servlet: 
+    context-path: /
+  tomcat:
+    remoteip:
+      protocol-header: X-Forwarded-Proto
+      port-header: X-Forwarded-Port
+    basedir: data/tomcat
+    accesslog:
+      enabled: true
+
+# 
+#  Enable actuator on port 9090 for healthcheck with docker-compose
+#
+#  healthcheck:
+#    test: "wget -T5 -qO- http://localhost:9090/actuator/health | grep UP || exit 1"
+#    interval: 15s
+#    timeout: 5s
+#    retries: 5
+#    start_period: 20s
+#
+management:
+  server:
+    port: 9090
+  endpoints:
+    web:
+      exposure:
+        include: info,health,metrics
+
+springdoc:
+
+  api-docs:
+    path: "/api-docs"
+
+maui:
+  initialize-with-sample-data: true
+  # in seconds
+  person-update-ttl: 60

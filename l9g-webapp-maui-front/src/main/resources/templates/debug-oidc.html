@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>MAUI - Mqtt AUth apI</title>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" ></link>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" th:href="@{/}">MAUI - Mqtt AUth apI</a>
+        <div class="d-flex">
+          <span class="navbar-text">Hi, <span th:text="${fullname}">fullname</span>&nbsp;&nbsp;&nbsp;</span>
+          <span class="nav-item"><a th:href="@{/logout}" class="btn btn-outline-secondary">Logout</a></span>
+          <form style="margin-left: 1em" method="post" action="/logout">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
+            <input class="btn btn-outline-secondary" type="submit" value="Instant Logout"></input>
+          </form>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <h1 style="margin-top: 0.5em; margin-bottom: 1em;">Debug-OIDC</h1>
+
+      <nav style="margin-top: 2em">
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+          <a class="nav-link active" id="nav-actuator-tab" data-bs-toggle="tab" href="#nav-actuator" role="tab" aria-controls="nav-actuator" aria-selected="true">Actuator</a>
+          <a class="nav-link" id="nav-principal-getter-tab" data-bs-toggle="tab" href="#nav-principal-getter" role="tab" aria-controls="nav-principal-getter">Getter</a>
+          <a class="nav-link" id="nav-principal-attributes-tab" data-bs-toggle="tab" href="#nav-principal-attributes" role="tab" aria-controls="nav-principal-attributes">Attributes</a>
+          <a class="nav-link" id="nav-principal-claims-tab" data-bs-toggle="tab" href="#nav-principal-claims" role="tab" aria-controls="nav-principal-claims">Claims</a>
+          <a class="nav-link" id="nav-principal-address-tab" data-bs-toggle="tab" href="#nav-principal-address" role="tab" aria-controls="nav-principal-address">Address</a>
+          <a class="nav-link" id="nav-access-token-tab" data-bs-toggle="tab" href="#nav-access-token" role="tab" aria-controls="nav-access-token">Access Token</a>
+        </div>
+      </nav>
+
+
+      <div class="tab-content" id="nav-tabContent">
+
+        <div class="tab-pane fade show active" id="nav-actuator" role="tabpanel" aria-labelledby="nav-actuator-tab">
+          <h2 style="margin-top: 1em">Actuator</h2>
+          <ul>
+            <li><a target="_blank" th:href="@{/api/v1/metrics}">MeterRegistry</a></li>
+            <li><a target="_blank" href="http://localhost:9091/actuator/health">Actuator health</a></li>
+            <li><a target="_blank" href="http://localhost:9091/actuator/info">Actuator info</a></li>
+            <li><a target="_blank" href="http://localhost:9091/actuator/metrics">Actuator metrics</a></li>
+            <li><a target="_blank" href="http://localhost:9091/actuator/metrics/process.uptime">Actuator metrics/process.uptime</a></li>
+          </ul>
+        </div>
+
+        <div class="tab-pane fade" id="nav-principal-getter" role="tabpanel" aria-labelledby="nav-principal-getter-tab">
+          <h2 style="margin-top: 1em">Principal - Getter</h2>
+          <table class="table table-striped">
+            <tbody>
+              <tr th:each="entry : ${pgetter}">
+                <th width='25%' th:text="${entry.key}"></th>
+                <td th:text="${entry.value}"></td>
+              </tr>
+            </tbody>
+          </table>
+          <ul>
+            <li><a target="_blank" th:href="@{/principal}">principal</a></li>
+            <li><a target="_blank" th:href="@{/principal-attributes}">principal attributes</a></li>
+            <li><a target="_blank" th:href="@{/principal-userinfo}">principal userinfo</a></li>
+            <li><a target="_blank" th:href="@{/principal-idtoken}">principal idToken</a></li>
+            <li><a target="_blank" th:href="@{/build-properties}">build properties</a></li>
+          </ul>
+          <table class="table table-striped">
+            <tbody>
+              <tr>
+                <th width='25%'>Issuer</th>
+                <td th:text="${issuer}"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="tab-pane fade" id="nav-principal-attributes" role="tabpanel" aria-labelledby="nav-principal-attributes-tab">
+          <h2 style="margin-top: 1em">Attributes - OAuth2 Identity Provider (KeyCloak)</h2>
+          <table class="table table-striped">
+            <tbody>
+              <tr th:each="entry : ${pattributes}">
+                <th width='25%' th:text="${entry.key}"></th>
+                <td th:text="${entry.value}"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="tab-pane fade" id="nav-principal-claims" role="tabpanel" aria-labelledby="nav-principal-claims-tab">
+          <h2 style="margin-top: 1em">Claims - JWT Token (standarized)</h2>
+          <table class="table table-striped">
+            <tbody>
+              <tr th:each="entry : ${pclaims}">
+                <th width='25%' th:text="${entry.key}"></th>
+                <td th:text="${entry.value}"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="tab-pane fade" id="nav-principal-address" role="tabpanel" aria-labelledby="nav-principal-address-tab">
+          <h2 style="margin-top: 1em">Address</h2>
+          <table class="table table-striped">
+            <tbody>
+              <tr th:each="entry : ${paddress}">
+                <th width='25%' th:text="${entry.key}"></th>
+                <td th:text="${entry.value}"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="tab-pane fade" id="nav-access-token" role="tabpanel" aria-labelledby="nav-access-token-tab">
+          <h2 style="margin-top: 1em">Access Token</h2>
+
+          <table class="table table-striped">
+            <tbody>
+              <tr><th width='25%'>expires at</th><td th:text="${accessToken.expiresAt}"></td></tr>
+              <tr><th width='25%'>scopes</th><td th:text="${accessToken.scopes}"></td></tr>
+              <tr><th width='25%'>token value</th>
+                <td>
+                  <form>
+                    <div class="form-group">
+                      <textarea class="form-control" rows="10" th:text="${accessToken.tokenValue}"></textarea>
+                    </div>
+                  </form>
+                </td>
+              </tr>
+              <tr><th width='25%'>curl sample</th>
+                <td>
+                  <form>
+                    <div class="form-group">
+                      <textarea class="form-control" rows="10">
+curl -H "Authorization: Bearer [[${accessToken.tokenValue}]]" http://mqtt.dev.sonia.de:8181/api/v1/application-permission | jq
+                      </textarea>
+                    </div>
+                  </form>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>
+            <a target='_blank' href='https://jwt.io/'><img src='http://jwt.io/img/badge.svg'></a>
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</body>
+</html>

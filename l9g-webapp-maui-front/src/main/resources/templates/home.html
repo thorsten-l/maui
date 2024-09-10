@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <title th:replace="~{fragments::mauiHeader(title='MAUI')}">MAUI</title>
+  </head>
+
+  <body>
+    <div th:replace="~{fragments::mauiNavbar}"></div>
+
+    <div class="container">
+      <h1 style="margin-top: 0.5em">
+        <a class="btn btn-dark" 
+           th:href="@{/application/create}">
+          <span class="mdi mdi-plus-thick"></span>
+        </a>
+        <span th:text="#{applications}" th:remove="tags">applications</span>
+      </h1>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th><span th:text="#{name}" th:remove="tags">name</span></th>
+            <th><span th:text="#{base_topic}" th:remove="tags">base_topic</span></th>
+            <th><span th:text="#{expiration_date}" th:remove="tags">expiration_date</span></th>
+            <th><span th:text="#{access}" th:remove="tags">access</span></th>
+            <th><span th:text="#{actions}" th:remove="tags">actions</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="align-middle" th:each="entry : ${mauiApplicationPermissions}">
+            <td width='25%' th:text="${entry.application.name}"></td>
+            <td th:text="${entry.application.baseTopic}"></td>
+            <td th:text="${#dates.format(entry.application.expirationDate, 'yyyy-MM-dd')}"></td>
+            <td th:text="#{'application_permissions.' + ${entry.permissions}}"></td>
+            <td width='5%' class="text-nowrap">
+              <div th:remove="tags" th:if="${entry.permissions == 1 || entry.permissions == 2}">
+                <a class="btn btn-primary" 
+                   th:href="@{/application/{id}(id=${entry.application.id})}">
+                  <span class="mdi mdi-pencil"></span>
+                </a>
+              </div>
+              <div th:remove="tags" th:if="${entry.permissions == 3}">
+                <a class="btn btn-secondary" 
+                   th:href="@{/application/{id}(id=${entry.application.id})}">
+                  <span class="mdi mdi-information"></span>
+                </a>
+              </div>
+              <span th:if='${entry.permissions == 1}' th:remove="tags">
+                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                        th:attr="data-id=${entry.application.id}, data-name=${entry.application.name}">
+                  <i class="mdi mdi-delete"></i>
+                </button>
+              </span>
+            </td>          
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteModalLabel">Delete Application</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form th:action="@{/application/delete}" th:object="${mauiApplication}" th:method="POST">
+            <div class="modal-body">
+              <p id="modalContent">Möchtest du die Anwendung wirklich löschen?</p>
+              <label for="deleteApplicationId" class="col-form-label">Application ID</label>
+              <input type="text" class="form-control" th:field="*{id}" id="deleteApplicationId" readonly="true"/>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-danger">Delete</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+
+    <script>
+      var deleteModal = document.getElementById('deleteModal');
+
+      deleteModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        var applicationId = button.getAttribute('data-id');
+        var applicationName = button.getAttribute('data-name');
+        var modalContent = deleteModal.querySelector('.modal-body #modalContent');
+        modalContent.textContent = 'Möchtest du die Anwendung "' + applicationName + '" wirklich löschen?';
+        var applicationIdInput = deleteModal.querySelector('.modal-body #deleteApplicationId');
+        applicationIdInput.value = applicationId;
+      });
+    </script>
+
+    <div th:replace="~{fragments::mauiFooter}"></div>
+  </body>
+</html>

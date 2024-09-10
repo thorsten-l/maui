@@ -1,0 +1,111 @@
+# Copyright 2024 Thorsten Ludewig (t.ludewig@gmail.com).
+# 
+# Licensed under the Apache License, Version 2.0 (the "License")
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+spring:
+
+  profiles:
+    active: default
+
+  application:
+    name: sonia-webapp-fisres
+
+  output:
+    ansi:
+      enabled: ALWAYS
+
+  messages:
+    basename: messages
+    encoding: UTF-8
+
+  security:
+    oauth2:
+      client:
+        registration:
+          iddev:
+            client-id: maui
+            client-secret: 9kptdm7wltOyx9Rknm7araUmWk1rVprm
+            scope: openid,profile,email
+        provider:
+          iddev:
+            issuer-uri: https://id.dev.sonia.de/realms/dev
+            user-name-attribute: preferred_username
+
+#  main:
+#    banner-mode: off
+#    # web-application-type: none
+
+logging:
+  pattern:
+    console: "%date{yyyy-MM-dd HH:mm:ss} %magenta([%thread]) %highlight(%-5level) %logger:%line - %yellow(%msg %n)"
+  level:
+    root: INFO
+    l9g: TRACE
+    reactor.netty.http.client: OFF          # WebClient HTTP-Logging
+    reactor.netty.transport: OFF            # Netzwerktransport-Details
+    org.springframework.web.client: OFF     # RestTemplate Logging
+    org.springframework.http: OFF           # HTTP-Daten Logging
+    org.apache.http: OFF                    # Apache HttpClient Logging
+    org.apache.http.wire: OFF               # Apache HttpClient Wire Logging
+    org.springframework.web: OFF            # Spring MVC Server-seitiger Traffic
+    org.apache.coyote.http11: OFF            # Tomcat Server Logging
+    org.apache.tomcat.util.http: OFF        # Tomcat HTTP Logging
+    org.apache.tomcat.util.net.NioEndpoint: OFF
+    sun.net.www.protocol.http.HttpURLConnection: OFF
+    org.springframework.web.servlet: OFF
+
+server:
+  port: 8182
+  servlet: 
+    context-path: /
+  tomcat:
+    remoteip:
+      protocol-header: X-Forwarded-Proto
+      port-header: X-Forwarded-Port
+    basedir: data/tomcat
+    accesslog:
+      enabled: true
+#  error:
+#    whitelabel:
+#      enabled: false
+#    path: /error
+
+# 
+#  Enable actuator on port 9090 for healthcheck with docker-compose
+#
+#  healthcheck:
+#    test: "wget -T5 -qO- http://localhost:9091/actuator/health | grep UP || exit 1"
+#    interval: 15s
+#    timeout: 5s
+#    retries: 5
+#    start_period: 20s
+#
+management:
+  server:
+    port: 9091
+  endpoints:
+    web:
+      exposure:
+        include: info,health,metrics
+
+springdoc:
+
+  api-docs:
+    path: "/api-docs"
+
+maui:
+  api:
+    base-url: http://maui.dev.sonia.de:8181
+  oauth2:
+    registration-id: "iddev"
+    client-id: "maui"
+  debug-oidc: true
