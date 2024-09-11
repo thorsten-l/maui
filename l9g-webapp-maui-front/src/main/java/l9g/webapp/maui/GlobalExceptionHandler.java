@@ -15,11 +15,9 @@
  */
 package l9g.webapp.maui;
 
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -33,25 +31,29 @@ import org.springframework.web.servlet.ModelAndView;
 @Slf4j
 public class GlobalExceptionHandler
 {
-  @ExceptionHandler(org.springframework.web.client.HttpClientErrorException.BadRequest.class)
+  @ExceptionHandler(
+    org.springframework.web.client.HttpClientErrorException.BadRequest.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public ModelAndView handleBadRequestException(HttpServletRequest request, Exception ex)
+  public ModelAndView handleBadRequestException(HttpServletRequest request,
+    Exception ex)
   {
     ModelAndView modelAndView = new ModelAndView("error/400");
     modelAndView.addObject("pageErrorRequestUri", request.getRequestURI());
     modelAndView.addObject("pageErrorException", ex.getMessage());
     return modelAndView;
   }
-  
-  @ExceptionHandler(org.springframework.web.servlet.resource.NoResourceFoundException.class)
+
+  @ExceptionHandler(
+    org.springframework.web.servlet.resource.NoResourceFoundException.class)
   @ResponseStatus(HttpStatus.NOT_FOUND)
-  public ModelAndView handleNotFoundException(HttpServletRequest request, Exception ex)
+  public ModelAndView handleNotFoundException(HttpServletRequest request,
+    Exception ex)
   {
     ModelAndView modelAndView = new ModelAndView("error/404");
     modelAndView.addObject("pageErrorRequestUri", request.getRequestURI());
     return modelAndView;
   }
-  
+
   @ExceptionHandler(Exception.class)
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   public ModelAndView handleException(HttpServletRequest request, Exception ex)
@@ -59,15 +61,16 @@ public class GlobalExceptionHandler
     ModelAndView modelAndView = new ModelAndView("error/500");
     modelAndView.addObject("pageErrorRequestUri", request.getRequestURI());
     modelAndView.addObject("pageErrorException", ex.getMessage());
-    modelAndView.addObject("pageErrorExceptionClassname", ex.getClass().getCanonicalName());
+    modelAndView.addObject("pageErrorExceptionClassname", ex.getClass().
+      getCanonicalName());
 
-    StringBuilder stackTrace = new StringBuilder();    
-    for( StackTraceElement element : ex.getStackTrace())
+    StringBuilder stackTrace = new StringBuilder();
+    for (StackTraceElement element : ex.getStackTrace())
     {
       stackTrace.append(element.toString());
       stackTrace.append('\n');
     }
-    
+
     modelAndView.addObject("pageErrorStacktrace", stackTrace.toString());
     return modelAndView;
   }
