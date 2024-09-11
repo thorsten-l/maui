@@ -11,7 +11,7 @@
     <div class="container">
       <h1 style="margin-top: 0.5em; margin-bottom: 1em;"><span th:text="#{application}" th:remove="tags">application</span>: <span th:text='${mauiApplication.name}' th:remove="tags"></span></h1>
 
-      <form th:action="@{/application/update}" th:object="${mauiApplication}" th:method="POST">
+      <form th:action="@{/application/{id}(id=${mauiApplication.id})}" th:object="${mauiApplication}" th:method="POST">
         <table class="table table-striped">
           <tbody>
             <tr>
@@ -32,9 +32,9 @@
             </tr>
             <tr>
               <th width='15%'><span th:text="#{expiration_date}" th:remove="tags">expiration_date</span></th>
-              <td>
+              <td>                
                 <div class="input-group date" id="datepicker">
-                  <input type="text" class="form-control" id="expiration_date" th:value="${#dates.format(mauiApplication.expirationDate, 'yyyy-MM-dd')}" />
+                  <input type="text" class="form-control" th:field="*{expirationDate}" />
                   <span class="input-group-append">
                     <span class="input-group-text bg-light d-block">
                       <i class="mdi mdi-calendar-month"></i>

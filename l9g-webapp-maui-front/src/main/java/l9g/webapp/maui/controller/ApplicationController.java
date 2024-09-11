@@ -53,23 +53,47 @@ public class ApplicationController
     Application application = mauiApiClientService.findApplicationById(id);
     log.debug("mauiApplication={}", application);
 
-    List<ApplicationPermission> personPermissions 
+    List<ApplicationPermission> personPermissions
       = mauiApiClientService.findPersonPermissions(id);
     log.debug("personPermissions={}", personPermissions);
-    
+
     model.addAttribute("mauiApplication", application);
     model.addAttribute("mauiPersonPermissions", personPermissions);
     return "application";
   }
 
+  @PostMapping("/{id}")
+  public String updateMauiApplication(
+    @AuthenticationPrincipal DefaultOidcUser principal,
+    @PathVariable String id, Application formApplication,
+     Model model
+  )
+  {
+    log.debug("mauiApplication id={}", id);
+    controllerUtil.defaultModelAttributes(principal, model, false, id);
+    log.debug("applicationForm={}", formApplication);
+    log.info("applicationForm.expirationDate={}", formApplication.getExpirationDate());
+
+    Application application = mauiApiClientService.findApplicationById(id);
+    log.debug("mauiApplication={}", application);
+
+    List<ApplicationPermission> personPermissions
+      = mauiApiClientService.findPersonPermissions(id);
+    log.debug("personPermissions={}", personPermissions);
+
+    model.addAttribute("mauiApplication", application);
+    model.addAttribute("mauiPersonPermissions", personPermissions);
+    return "redirect:/application/" + id;
+  }
+
   @PostMapping("/delete")
   public String mauiApplicationDelete(Model model,
     @AuthenticationPrincipal DefaultOidcUser principal,
-    Application mauiApplication
+    Application formApplication
   )
   {
-    log.debug("mauiApplicationDelete = {}", mauiApplication);
-    mauiApiClientService.deleteApplicationById(mauiApplication.getId());
+    log.debug("mauiApplicationDelete = {}", formApplication);
+    mauiApiClientService.deleteApplicationById(formApplication.getId());
     return "redirect:/";
   }
 
