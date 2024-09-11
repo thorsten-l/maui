@@ -16,6 +16,8 @@
 package l9g.webapp.maui.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonView;
+import l9g.webapp.maui.json.View;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -26,11 +28,23 @@ import lombok.ToString;
  */
 @Getter
 @Setter
-@ToString(callSuper = true)
+@ToString
 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-public class Property extends UuidObject
+public class DtoTopicPermission extends DtoUuidObject
 {
-  private String key;
+  public static final int TOPIC_PERMISSION_NONE = 0;
 
-  private String value;
+  public static final int TOPIC_PERMISSION_READONLY = 1;
+
+  public static final int TOPIC_PERMISSION_WRITEONLY = 2;
+
+  public static final int TOPIC_PERMISSION_READWRITE = 3;
+
+  public static final int TOPIC_PERMISSION_CONNECT = 4;
+
+  @JsonView(View.Base.class)
+  private DtoTopic topic;
+
+  @JsonView(View.Base.class)
+  private int permissions;
 }

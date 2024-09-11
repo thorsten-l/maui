@@ -30,7 +30,7 @@ import lombok.ToString;
 @Setter
 @ToString(callSuper = true)
 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-public class Person extends UuidObject
+public class DtoPerson extends DtoUuidObject
 {
   @JsonView(View.Admin.class)
   private String username;

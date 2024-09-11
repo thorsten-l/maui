@@ -20,7 +20,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-public class UuidObject
+public class DtoUuidObject
 {  
   @JsonView(View.Admin.class)
   private String createdBy;

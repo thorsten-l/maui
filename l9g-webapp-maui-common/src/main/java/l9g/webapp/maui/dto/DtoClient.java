@@ -17,6 +17,7 @@ package l9g.webapp.maui.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
+import java.util.List;
 import l9g.webapp.maui.json.View;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,23 +29,31 @@ import lombok.ToString;
  */
 @Getter
 @Setter
-@ToString
+@ToString(callSuper = true)
 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-public class TopicPermission extends UuidObject
+public class DtoClient extends DtoUuidObject
 {
-  public static final int TOPIC_PERMISSION_NONE = 0;
-
-  public static final int TOPIC_PERMISSION_READONLY = 1;
-
-  public static final int TOPIC_PERMISSION_WRITEONLY = 2;
-
-  public static final int TOPIC_PERMISSION_READWRITE = 3;
-
-  public static final int TOPIC_PERMISSION_CONNECT = 4;
+  @JsonView(View.Base.class)
+  private String username;
 
   @JsonView(View.Base.class)
-  private Topic topic;
+  private String passwordClear;
+
+  @JsonView(View.Admin.class)
+  private String passwordHash;
 
   @JsonView(View.Base.class)
-  private int permissions;
+  private String name;
+
+  @JsonView(View.Base.class)
+  private String description;
+
+  @JsonView(View.Base.class)
+  private boolean active;
+
+  @JsonView(View.Admin.class)
+  private boolean admin;
+
+  @JsonView(View.Base.class)
+  private List<DtoTopicPermission> topicPermissions;
 }

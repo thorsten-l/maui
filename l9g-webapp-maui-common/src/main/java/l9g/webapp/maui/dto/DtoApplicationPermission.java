@@ -17,58 +17,34 @@ package l9g.webapp.maui.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
-import java.util.Date;
-import java.util.List;
 import l9g.webapp.maui.json.View;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  *
  * @author Thorsten Ludewig <t.ludewig@gmail.com>
  */
-@NoArgsConstructor
 @Getter
 @Setter
-@ToString(callSuper = true)
+@ToString
 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-public class Application extends UuidObject
+public class DtoApplicationPermission extends DtoUuidObject
 {
+  public static final int APPLICATION_PERMISSION_NONE = 0;
+  public static final int APPLICATION_PERMISSION_OWNER = 1;
+  public static final int APPLICATION_PERMISSION_MANAGER = 2;
+  public static final int APPLICATION_PERMISSION_CONSUMER = 3;
 
-  public Application(String baseTopic, String name, String description,
-    Date expirationDate)
-  {
-    this.baseTopic = baseTopic;
-    this.name = name;
-    this.description = description;
-    this.expirationDate = expirationDate;
-  }
-
+  @JsonView(View.ApplicationPermissionApplication.class)
+  @ToString.Exclude
+  private DtoApplication application;
+  
+  @JsonView(View.ApplicationPermissionPerson.class)
+  @ToString.Exclude
+  private DtoPerson person;
+  
   @JsonView(View.Base.class)
-  private String baseTopic;
-
-  @JsonView(View.Base.class)
-  private String name;
-
-  @JsonView(View.Base.class)
-  private String description;
-
-  @JsonView(View.Base.class)
-  @DateTimeFormat(pattern = "yyyy-MM-dd")
-  private Date expirationDate;
-
-  @JsonView(
-    {
-      View.Admin.class, View.Application.class
-    })
-  private List<Client> clients;
-
-  @JsonView(
-    {
-      View.Admin.class, View.Application.class
-    })
-  private List<Topic> topics;
+  private int permissions;
 }

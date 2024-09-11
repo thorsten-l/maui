@@ -28,23 +28,10 @@ import lombok.ToString;
  */
 @Getter
 @Setter
-@ToString
+@ToString(callSuper = true)
 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-public class ApplicationPermission extends UuidObject
+public class DtoTopic extends DtoUuidObject
 {
-  public static final int APPLICATION_PERMISSION_NONE = 0;
-  public static final int APPLICATION_PERMISSION_OWNER = 1;
-  public static final int APPLICATION_PERMISSION_MANAGER = 2;
-  public static final int APPLICATION_PERMISSION_CONSUMER = 3;
-
-  @JsonView(View.ApplicationPermissionApplication.class)
-  @ToString.Exclude
-  private Application application;
-  
-  @JsonView(View.ApplicationPermissionPerson.class)
-  @ToString.Exclude
-  private Person person;
-  
-  @JsonView(View.Base.class)
-  private int permissions;
+  @JsonView({View.Admin.class,View.Application.class})
+  private String subTopic;
 }
