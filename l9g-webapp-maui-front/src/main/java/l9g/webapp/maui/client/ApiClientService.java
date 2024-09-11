@@ -19,9 +19,9 @@ import jakarta.annotation.PostConstruct;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
-import l9g.webapp.maui.dto.Application;
-import l9g.webapp.maui.dto.ApplicationPermission;
-import l9g.webapp.maui.dto.Person;
+import l9g.webapp.maui.dto.DtoApplication;
+import l9g.webapp.maui.dto.DtoApplicationPermission;
+import l9g.webapp.maui.dto.DtoPerson;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -87,7 +87,7 @@ public class ApiClientService
       });
   }
 
-  public List<Person> findAllPersons()
+  public List<DtoPerson> findAllPersons()
   {
     log.debug("findPerson");
 
@@ -96,12 +96,12 @@ public class ApiClientService
       .uri("/api/v1/person")
       .header("Authorization", "Bearer " + getBearer())
       .retrieve()
-      .body(new ParameterizedTypeReference<List<Person>>()
+      .body(new ParameterizedTypeReference<List<DtoPerson>>()
       {
       });
   }
 
-  public List<ApplicationPermission> findApplicationPermissions()
+  public List<DtoApplicationPermission> findApplicationPermissions()
   {
     log.debug("findApplicationPermissions");
 
@@ -110,12 +110,12 @@ public class ApiClientService
       .uri("/api/v1/application-permission")
       .header("Authorization", "Bearer " + getBearer())
       .retrieve()
-      .body(new ParameterizedTypeReference<List<ApplicationPermission>>()
+      .body(new ParameterizedTypeReference<List<DtoApplicationPermission>>()
       {
       });
   }
 
-  public List<ApplicationPermission> findPersonPermissions(String id)
+  public List<DtoApplicationPermission> findPersonPermissions(String id)
   {
     log.debug("findPersonPermissions");
 
@@ -124,12 +124,12 @@ public class ApiClientService
       .uri("/api/v1/person-permission/{id}", id)
       .header("Authorization", "Bearer " + getBearer())
       .retrieve()
-      .body(new ParameterizedTypeReference<List<ApplicationPermission>>()
+      .body(new ParameterizedTypeReference<List<DtoApplicationPermission>>()
       {
       });
   }
 
-  public ApplicationPermission findOwnPersonPermissions(String id)
+  public DtoApplicationPermission findOwnPersonPermissions(String id)
   {
     log.debug("findOwnPersonPermissions application id={}", id);
 
@@ -138,12 +138,12 @@ public class ApiClientService
       .uri("/api/v1/person-permission/own/{id}", id)
       .header("Authorization", "Bearer " + getBearer())
       .retrieve()
-      .body(new ParameterizedTypeReference<ApplicationPermission>()
+      .body(new ParameterizedTypeReference<DtoApplicationPermission>()
       {
       });
   }
 
-  public List<Application> findApplications()
+  public List<DtoApplication> findApplications()
   {
     log.debug("findApplications");
 
@@ -152,12 +152,12 @@ public class ApiClientService
       .uri("/api/v1/application")
       .header("Authorization", "Bearer " + getBearer())
       .retrieve()
-      .body(new ParameterizedTypeReference<List<Application>>()
+      .body(new ParameterizedTypeReference<List<DtoApplication>>()
       {
       });
   }
 
-  public Application findApplicationById(String id)
+  public DtoApplication findApplicationById(String id)
   {
     log.debug("findApplications");
 
@@ -166,7 +166,7 @@ public class ApiClientService
       .uri("/api/v1/application/{id}", id)
       .header("Authorization", "Bearer " + getBearer())
       .retrieve()
-      .body(new ParameterizedTypeReference<Application>()
+      .body(new ParameterizedTypeReference<DtoApplication>()
       {
       });
   }
@@ -191,7 +191,7 @@ public class ApiClientService
     return response.getBody();
   }
 
-  public Application createApplication(Application app)
+  public DtoApplication createApplication(DtoApplication app)
   {
     log.debug("createApplication");
 
@@ -201,12 +201,12 @@ public class ApiClientService
       .header("Authorization", "Bearer " + getBearer())
       .body(app)
       .retrieve()
-      .body(new ParameterizedTypeReference<Application>()
+      .body(new ParameterizedTypeReference<DtoApplication>()
       {
       });
   }
 
-  public List<Person> adminFindAllPersons()
+  public List<DtoPerson> adminFindAllPersons()
   {
     log.debug("adminFindAllPerson");
 
@@ -215,7 +215,7 @@ public class ApiClientService
       .uri("/api/v1/admin/person")
       .header("Authorization", "Bearer " + getBearer())
       .retrieve()
-      .body(new ParameterizedTypeReference<List<Person>>()
+      .body(new ParameterizedTypeReference<List<DtoPerson>>()
       {
       });
   }

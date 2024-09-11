@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2024 Thorsten Ludewig <t.ludewig@gmail.com>.
  *
@@ -15,21 +16,25 @@
  */
 package l9g.webapp.maui.controller;
 
+import jakarta.validation.Valid;
 import java.util.Date;
 import java.util.List;
 import l9g.webapp.maui.client.ApiClientService;
-import l9g.webapp.maui.dto.Application;
-import l9g.webapp.maui.dto.ApplicationPermission;
+import l9g.webapp.maui.dto.DtoApplication;
+import l9g.webapp.maui.dto.DtoApplicationPermission;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  *
@@ -50,14 +55,15 @@ public class ApplicationController
     log.debug("mauiApplication id={}", id);
     controllerUtil.defaultModelAttributes(principal, model, false, id);
 
-    Application application = mauiApiClientService.findApplicationById(id);
+    DtoApplication application = mauiApiClientService.findApplicationById(id);
     log.debug("mauiApplication={}", application);
 
-    List<ApplicationPermission> personPermissions
+    List<DtoApplicationPermission> personPermissions
       = mauiApiClientService.findPersonPermissions(id);
     log.debug("personPermissions={}", personPermissions);
 
     model.addAttribute("mauiApplication", application);
+    model.addAttribute("dtoApplication", application);
     model.addAttribute("mauiPersonPermissions", personPermissions);
     return "application";
   }
@@ -65,31 +71,38 @@ public class ApplicationController
   @PostMapping("/{id}")
   public String updateMauiApplication(
     @AuthenticationPrincipal DefaultOidcUser principal,
-    @PathVariable String id, Application formApplication,
-     Model model
-  )
+    @PathVariable String id,
+    RedirectAttributes redirectAttributes,
+    @Valid @ModelAttribute("dtoApplication") DtoApplication dtoApplication, BindingResult bindingResult, Model model)
   {
     log.debug("mauiApplication id={}", id);
     controllerUtil.defaultModelAttributes(principal, model, false, id);
-    log.debug("applicationForm={}", formApplication);
-    log.info("applicationForm.expirationDate={}", formApplication.getExpirationDate());
+    log.debug("dtoApplication={}", dtoApplication);
 
-    Application application = mauiApiClientService.findApplicationById(id);
-    log.debug("mauiApplication={}", application);
+    if (bindingResult.hasErrors())
+    {
+      log.debug("Form error: {}", bindingResult);
+      DtoApplication application = mauiApiClientService.findApplicationById(id);
+      List<DtoApplicationPermission> personPermissions
+        = mauiApiClientService.findPersonPermissions(id);
+      model.addAttribute("dtoApplication", dtoApplication);
+      model.addAttribute("mauiApplication", application);
+      model.addAttribute("mauiPersonPermissions", personPermissions);
+      log.debug("show errors....");
+      return "application";
+    }
 
-    List<ApplicationPermission> personPermissions
-      = mauiApiClientService.findPersonPermissions(id);
-    log.debug("personPermissions={}", personPermissions);
+    redirectAttributes.addFlashAttribute("errorStatus", new ErrorStatus(1,
+      "Application Update",
+      "Application '" + dtoApplication.getName() + "' successfully updated."));
 
-    model.addAttribute("mauiApplication", application);
-    model.addAttribute("mauiPersonPermissions", personPermissions);
     return "redirect:/application/" + id;
   }
 
   @PostMapping("/delete")
   public String mauiApplicationDelete(Model model,
     @AuthenticationPrincipal DefaultOidcUser principal,
-    Application formApplication
+    DtoApplication formApplication
   )
   {
     log.debug("mauiApplicationDelete = {}", formApplication);
@@ -100,11 +113,11 @@ public class ApplicationController
   @GetMapping("/create")
   public String mauiApplicationCreate(Model model,
     @AuthenticationPrincipal DefaultOidcUser principal,
-    Application mauiApplication
+    DtoApplication mauiApplication
   )
   {
     log.debug("mauiApplicationCreate = {}", mauiApplication);
-    Application newApplication = new Application("baseTopic" + System.
+    DtoApplication newApplication = new DtoApplication("baseTopic" + System.
       currentTimeMillis(),
       "app name", "app decription", new Date());
     newApplication = mauiApiClientService.createApplication(newApplication);

@@ -23,9 +23,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import l9g.webapp.maui.client.ApiClientService;
-import l9g.webapp.maui.dto.Application;
-import l9g.webapp.maui.dto.ApplicationPermission;
-import l9g.webapp.maui.dto.Person;
+import l9g.webapp.maui.dto.DtoApplication;
+import l9g.webapp.maui.dto.DtoApplicationPermission;
+import l9g.webapp.maui.dto.DtoPerson;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.info.BuildProperties;
@@ -128,42 +128,42 @@ public class UserController
   }
 
   @GetMapping("/maui-api/persons")
-  public List<Person> findAllPersons()
+  public List<DtoPerson> findAllPersons()
   {
     log.debug("findAllPersons");
     return mauiApiClientService.findAllPersons();
   }
 
   @GetMapping("/maui-api/admin/persons")
-  public List<Person> adminFindAllPersons()
+  public List<DtoPerson> adminFindAllPersons()
   {
     log.debug("adminFindAllPersons");
     return mauiApiClientService.adminFindAllPersons();
   }
 
   @GetMapping("/maui-api/application-permissions")
-  public List<ApplicationPermission> findApplicationPermissions()
+  public List<DtoApplicationPermission> findApplicationPermissions()
   {
     log.debug("findApplicationPermissions");
     return mauiApiClientService.findApplicationPermissions();
   }
 
   @GetMapping("/maui-api/person-permissions/{id}")
-  public List<ApplicationPermission> findPersonPermissions(@PathVariable String id)
+  public List<DtoApplicationPermission> findPersonPermissions(@PathVariable String id)
   {
     log.debug("findApplicationPermissions");
     return mauiApiClientService.findPersonPermissions(id);
   }
 
   @GetMapping("/maui-api/applications")
-  public List<Application> findApplications()
+  public List<DtoApplication> findApplications()
   {
     log.debug("findApplications");
     return mauiApiClientService.findApplications();
   }
 
   @GetMapping("/maui-api/application/{id}")
-  public Application findApplicationById(@PathVariable String id)
+  public DtoApplication findApplicationById(@PathVariable String id)
   {
     log.debug("findApplicationById({})", id);
     return mauiApiClientService.findApplicationById(id);
@@ -177,10 +177,10 @@ public class UserController
   }
 
   @GetMapping("/maui-api/create-application")
-  public Application createApplication()
+  public DtoApplication createApplication()
   {
     log.debug("createApplication");
-    Application newApplication = new Application( "baseTopic" + System.currentTimeMillis(), 
+    DtoApplication newApplication = new DtoApplication( "baseTopic" + System.currentTimeMillis(), 
       "app name", "app decription", new Date());
     newApplication = mauiApiClientService.createApplication(newApplication);
     log.debug("response = {}", newApplication);

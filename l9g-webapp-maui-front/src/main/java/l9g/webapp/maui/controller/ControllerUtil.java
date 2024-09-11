@@ -18,11 +18,12 @@ package l9g.webapp.maui.controller;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import l9g.webapp.maui.client.ApiClientService;
-import l9g.webapp.maui.dto.Application;
-import l9g.webapp.maui.dto.ApplicationPermission;
+import l9g.webapp.maui.dto.DtoApplication;
+import l9g.webapp.maui.dto.DtoApplicationPermission;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Component;
@@ -49,10 +50,10 @@ public class ControllerUtil
     this.uuid = UUID.randomUUID().toString();
   }
 
-  public List<ApplicationPermission> cachedApplicationPermissions(
+  public List<DtoApplicationPermission> cachedApplicationPermissions(
     String username, boolean forceReload)
   {
-    List<ApplicationPermission> cachedPermissions
+    List<DtoApplicationPermission> cachedPermissions
       = applicationPermissionCache.getIfPresent(username);
 
     if (forceReload || cachedPermissions == null)
@@ -76,11 +77,11 @@ public class ControllerUtil
     return username + ";" + applicationId;
   }
 
-  public ApplicationPermission cachedOwnApplicationPermissions(
+  public DtoApplicationPermission cachedOwnApplicationPermissions(
     String username, String applicationId, boolean forceReload)
   {
     String cacheKey = ownCacheKey(username, applicationId);
-    ApplicationPermission cachedPermissions
+    DtoApplicationPermission cachedPermissions
       = ownApplicationPermissionCache.getIfPresent(cacheKey);
 
     if (forceReload || cachedPermissions == null)
@@ -95,7 +96,8 @@ public class ControllerUtil
     }
     else
     {
-      log.debug("Cache hit for own application permissions applicationId={}", applicationId);
+      log.debug("Cache hit for own application permissions applicationId={}",
+        applicationId);
     }
     return cachedPermissions;
   }
@@ -113,26 +115,35 @@ public class ControllerUtil
     log.debug("defaultModelAttributes username={} {} {}", principal.
       getPreferredUsername(), applicationId, uuid);
 
+    Optional<ErrorStatus> optionalErrorStatus = Optional.ofNullable(
+      (ErrorStatus) model.getAttribute("errorStatus"));
+
+    model.addAttribute("errorStatus", optionalErrorStatus.orElse(
+      new ErrorStatus(0, null, null)));
+
     if (applicationId != null)
     {
-      ApplicationPermission ownApplicationPermission
+      DtoApplicationPermission ownApplicationPermission
         = cachedOwnApplicationPermissions(
           principal.getPreferredUsername(), applicationId, forceReloadCache);
       log.debug("own application permission = {}", ownApplicationPermission);
       model.addAttribute("mauiOwnApplicationPermission",
         ownApplicationPermission.getPermissions());
-      model.addAttribute("mauiOwnerOrManager", 
-        ownApplicationPermission.getPermissions() == ApplicationPermission.APPLICATION_PERMISSION_OWNER
-        || ownApplicationPermission.getPermissions() == ApplicationPermission.APPLICATION_PERMISSION_MANAGER);
+      model.addAttribute("mauiOwnerOrManager",
+        ownApplicationPermission.getPermissions()
+        == DtoApplicationPermission.APPLICATION_PERMISSION_OWNER
+        || ownApplicationPermission.getPermissions()
+        == DtoApplicationPermission.APPLICATION_PERMISSION_MANAGER);
     }
     else
     {
-      model.addAttribute("mauiOwnApplicationPermission", ApplicationPermission.APPLICATION_PERMISSION_NONE);
-      model.addAttribute("mauiOwnerOrManager", false );
+      model.addAttribute("mauiOwnApplicationPermission",
+        DtoApplicationPermission.APPLICATION_PERMISSION_NONE);
+      model.addAttribute("mauiOwnerOrManager", false);
     }
 
     model.addAttribute("fullname", principal.getFullName());
-    model.addAttribute("mauiApplication", new Application());
+    model.addAttribute("mauiApplication", new DtoApplication());
     model.addAttribute("mauiApplicationPermissions",
       cachedApplicationPermissions(principal.getPreferredUsername(),
         forceReloadCache));
@@ -152,9 +163,9 @@ public class ControllerUtil
 
   private final ApiClientService mauiApiClientService;
 
-  private final Cache<String, List<ApplicationPermission>> applicationPermissionCache;
+  private final Cache<String, List<DtoApplicationPermission>> applicationPermissionCache;
 
-  private final Cache<String, ApplicationPermission> ownApplicationPermissionCache;
+  private final Cache<String, DtoApplicationPermission> ownApplicationPermissionCache;
 
   private final String uuid;
 }
