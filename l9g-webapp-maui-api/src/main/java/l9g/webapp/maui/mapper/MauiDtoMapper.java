@@ -30,38 +30,38 @@ public interface MauiDtoMapper
 {
   public MauiDtoMapper INSTANCE = Mappers.getMapper(MauiDtoMapper.class);
 
-  // Application
-  public Application mauiApplicationToApplication(
+  // DtoApplication
+  public DtoApplication mauiApplicationToApplication(
     MauiApplication mauiApplication);
 
-  public List<Application> mauiApplicationToApplicationList(
+  public List<DtoApplication> mauiApplicationToApplicationList(
     List<MauiApplication> mauiApplication);
 
-  // ApplicationPermission
-  public ApplicationPermission mauiApplicationPermissionToApplicationPermission(
+  // DtoApplicationPermission
+  public DtoApplicationPermission mauiApplicationPermissionToApplicationPermission(
     MauiApplicationPermission mauiApplicationPermission);
 
-  public List<ApplicationPermission> mauiApplicationPermissionToApplicationPermissionList(
+  public List<DtoApplicationPermission> mauiApplicationPermissionToApplicationPermissionList(
     List<MauiApplicationPermission> mauiApplicationPermission);
 
-  // Client
-  public Client mauiClientToClient(MauiClient mauiClient);
+  // DtoClient
+  public DtoClient mauiClientToClient(MauiClient mauiClient);
 
-  public List<Client> mauiClientToClientList(List<MauiClient> mauiClient);
+  public List<DtoClient> mauiClientToClientList(List<MauiClient> mauiClient);
 
-  // Person
-  public Person mauiPersonToPerson(MauiPerson mauiPerson);
+  // DtoPerson
+  public DtoPerson mauiPersonToPerson(MauiPerson mauiPerson);
 
-  public List<Person> mauiPersonListToPersonList(List<MauiPerson> mauiPersonList);
+  public List<DtoPerson> mauiPersonListToPersonList(List<MauiPerson> mauiPersonList);
 
-  // Topic
-  public Topic mauiTopicToTopic(MauiTopic mauiTopic);
+  // DtoTopic
+  public DtoTopic mauiTopicToTopic(MauiTopic mauiTopic);
 
-  public List<Topic> mauiTopicToTopicList(List<MauiTopic> mauiTopic);
+  public List<DtoTopic> mauiTopicToTopicList(List<MauiTopic> mauiTopic);
 
-  // TopicPermission
-  public TopicPermission mauiTopicPermissionToTopicPermission(MauiTopicPermission mauiTopicPermission);
+  // DtoTopicPermission
+  public DtoTopicPermission mauiTopicPermissionToTopicPermission(MauiTopicPermission mauiTopicPermission);
 
-  public List<TopicPermission> mauiTopicPermissionToTopicPermissionList(
-    List<TopicPermission> mauiTopicPermission);
+  public List<DtoTopicPermission> mauiTopicPermissionToTopicPermissionList(
+    List<DtoTopicPermission> mauiTopicPermission);
 }

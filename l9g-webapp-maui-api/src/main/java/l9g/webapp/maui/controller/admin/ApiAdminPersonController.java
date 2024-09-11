@@ -24,7 +24,7 @@ import l9g.webapp.maui.db.MauiPersonsRepository;
 import l9g.webapp.maui.json.View;
 import static l9g.webapp.maui.json.View.JSON_STATUS_OK;
 import l9g.webapp.maui.db.model.MauiPerson;
-import l9g.webapp.maui.dto.Person;
+import l9g.webapp.maui.dto.DtoPerson;
 import l9g.webapp.maui.mapper.MauiDtoMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +49,7 @@ public class ApiAdminPersonController
 {
   @GetMapping()
   @JsonView(View.Admin.class)
-  public List<Person> adminFindAll()
+  public List<DtoPerson> adminFindAll()
   {
     log.debug("adminFindAll()");
     return MauiDtoMapper.INSTANCE.mauiPersonListToPersonList(personsRepository.findAll());

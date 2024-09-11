@@ -28,7 +28,7 @@ import l9g.webapp.maui.db.model.MauiApplication;
 import l9g.webapp.maui.db.model.MauiApplicationPermission;
 import static l9g.webapp.maui.db.model.MauiApplicationPermission.APPLICATION_PERMISSION_OWNER;
 import l9g.webapp.maui.db.model.MauiPerson;
-import l9g.webapp.maui.dto.Application;
+import l9g.webapp.maui.dto.DtoApplication;
 import l9g.webapp.maui.mapper.MauiDtoMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -58,7 +58,7 @@ public class ApiApplicationController
 {
   @GetMapping()
   @JsonView(View.Application.class)
-  public List<Application> findAll(
+  public List<DtoApplication> findAll(
     JwtAuthenticationToken jwtAuthenticationToken)
   {
     log.debug("findAll()");
@@ -74,7 +74,7 @@ public class ApiApplicationController
 
   @GetMapping("/{id}")
   @JsonView(View.Application.class)
-  public Application findById(
+  public DtoApplication findById(
     JwtAuthenticationToken jwtAuthenticationToken,
     @Parameter(description = "The application unique id", required = true)
     @PathVariable String id)
@@ -92,9 +92,9 @@ public class ApiApplicationController
 
   @PutMapping()
   @JsonView(View.Application.class)
-  public Application createApplication(
+  public DtoApplication createApplication(
     JwtAuthenticationToken jwtAuthenticationToken,
-    @RequestBody Application application)
+    @RequestBody DtoApplication application)
   {
     log.debug("createApplication()");
 
@@ -119,11 +119,11 @@ public class ApiApplicationController
 
   @PostMapping("/{id}")
   @JsonView(View.Application.class)
-  public Application updateApplication(
+  public DtoApplication updateApplication(
     JwtAuthenticationToken jwtAuthenticationToken,
     @Parameter(description = "The application unique id", required = true)
     @PathVariable String id,
-    @RequestBody Application application)
+    @RequestBody DtoApplication application)
   {
     log.debug("updateApplication({})", id);
 

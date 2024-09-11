@@ -24,7 +24,7 @@ import l9g.webapp.maui.db.MauiApplicationPermissionsRepository;
 import l9g.webapp.maui.db.model.MauiApplicationPermission;
 import l9g.webapp.maui.json.View;
 import l9g.webapp.maui.db.model.MauiPerson;
-import l9g.webapp.maui.dto.ApplicationPermission;
+import l9g.webapp.maui.dto.DtoApplicationPermission;
 import l9g.webapp.maui.mapper.MauiDtoMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,7 +50,7 @@ public class ApiPersonPermissionController
 
   @GetMapping("/{id}")
   @JsonView(View.ApplicationPermissionPerson.class)
-  public List<ApplicationPermission> findByUsernameAndApplicationId(
+  public List<DtoApplicationPermission> findByUsernameAndApplicationId(
     JwtAuthenticationToken jwtAuthenticationToken,
     @PathVariable String id)
   {
@@ -71,7 +71,7 @@ public class ApiPersonPermissionController
 
   @GetMapping("/own/{id}")
   @JsonView(View.ApplicationPermissionPerson.class)
-  public ApplicationPermission findOwnByUsernameAndApplicationId(
+  public DtoApplicationPermission findOwnByUsernameAndApplicationId(
     JwtAuthenticationToken jwtAuthenticationToken,
     @PathVariable String id)
   {
@@ -83,7 +83,7 @@ public class ApiPersonPermissionController
 
     log.debug("person={}", person);
 
-    ApplicationPermission permission = null;
+    DtoApplicationPermission permission = null;
 
     if (person != null && person.getUsername() != null)
     {

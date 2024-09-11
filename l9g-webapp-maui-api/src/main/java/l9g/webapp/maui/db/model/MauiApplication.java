@@ -25,7 +25,7 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import java.util.Date;
 import java.util.List;
-import l9g.webapp.maui.dto.Application;
+import l9g.webapp.maui.dto.DtoApplication;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -59,7 +59,7 @@ public class MauiApplication extends MauiUuidObject
     this.expirationDate = expirationDate;
   }
 
-  public MauiApplication(String createdBy, Application application)
+  public MauiApplication(String createdBy, DtoApplication application)
   {
     this(createdBy, application.getBaseTopic(), application.getName(),
       application.getDescription(), application.getExpirationDate());

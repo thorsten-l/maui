@@ -24,7 +24,7 @@ import l9g.webapp.maui.db.MauiApplicationPermissionsRepository;
 import l9g.webapp.maui.db.MauiPersonsRepository;
 import l9g.webapp.maui.json.View;
 import l9g.webapp.maui.db.model.MauiPerson;
-import l9g.webapp.maui.dto.ApplicationPermission;
+import l9g.webapp.maui.dto.DtoApplicationPermission;
 import l9g.webapp.maui.mapper.MauiDtoMapper;
 import l9g.webapp.maui.util.PasswordGeneratorService;
 import lombok.RequiredArgsConstructor;
@@ -51,7 +51,7 @@ public class ApiApplicationPermissionController
 
   @GetMapping()
   @JsonView(View.ApplicationPermissionApplication.class)
-  public List<ApplicationPermission> findByUsername(
+  public List<DtoApplicationPermission> findByUsername(
     JwtAuthenticationToken jwtAuthenticationToken)
   {
     log.debug("findByUsername() name={}", jwtAuthenticationToken.getName());

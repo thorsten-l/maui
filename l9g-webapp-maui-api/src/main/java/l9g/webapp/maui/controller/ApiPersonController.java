@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import l9g.webapp.maui.db.MauiPersonsRepository;
-import l9g.webapp.maui.dto.Person;
+import l9g.webapp.maui.dto.DtoPerson;
 import l9g.webapp.maui.json.View;
 import l9g.webapp.maui.mapper.MauiDtoMapper;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +44,7 @@ public class ApiPersonController
 {
   @GetMapping()
   @JsonView(View.Person.class)
-  public List<Person> findAll()
+  public List<DtoPerson> findAll()
   {
     log.debug("findAll()");
 
