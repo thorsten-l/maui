@@ -24,6 +24,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  *
@@ -56,6 +57,7 @@ public class Application extends UuidObject
   private String description;
 
   @JsonView(View.Base.class)
+  @DateTimeFormat(pattern = "yyyy-MM-dd")
   private Date expirationDate;
 
   @JsonView(
