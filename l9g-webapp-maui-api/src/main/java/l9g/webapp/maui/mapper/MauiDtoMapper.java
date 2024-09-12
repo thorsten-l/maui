@@ -19,13 +19,14 @@ import java.util.List;
 import l9g.webapp.maui.db.model.*;
 import l9g.webapp.maui.dto.*;
 import org.mapstruct.Mapper;
+import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
 /**
  *
  * @author Thorsten Ludewig <t.ludewig@gmail.com>
  */
-@Mapper
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface MauiDtoMapper
 {
   public MauiDtoMapper INSTANCE = Mappers.getMapper(MauiDtoMapper.class);

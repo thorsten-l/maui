@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import l9g.webapp.maui.dto.DtoApplication;
 import l9g.webapp.maui.dto.DtoApplicationPermission;
+import l9g.webapp.maui.dto.DtoErrorStatus;
 import l9g.webapp.maui.dto.DtoPerson;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -171,16 +172,16 @@ public class ApiClientService
       });
   }
 
-  public String deleteApplicationById(String id)
+  public DtoErrorStatus deleteApplicationById(String id)
   {
     log.debug("deleteApplicationById({})", id);
 
-    ResponseEntity<String> response = restClient
+    ResponseEntity<DtoErrorStatus> response = restClient
       .delete()
       .uri("/api/v1/application/{id}", id)
       .header("Authorization", "Bearer " + getBearer())
       .retrieve()
-      .toEntity(String.class);
+      .toEntity(DtoErrorStatus.class);
 
     if (response.getStatusCode() != HttpStatus.OK)
     {
@@ -198,6 +199,21 @@ public class ApiClientService
     return restClient
       .put()
       .uri("/api/v1/application")
+      .header("Authorization", "Bearer " + getBearer())
+      .body(app)
+      .retrieve()
+      .body(new ParameterizedTypeReference<DtoApplication>()
+      {
+      });
+  }
+
+  public DtoApplication updateApplication(DtoApplication app, String id)
+  {
+    log.debug("createApplication");
+
+    return restClient
+      .post()
+      .uri("/api/v1/application/{id}", id)
       .header("Authorization", "Bearer " + getBearer())
       .body(app)
       .retrieve()

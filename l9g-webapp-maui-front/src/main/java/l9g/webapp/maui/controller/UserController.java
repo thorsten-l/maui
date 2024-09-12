@@ -25,6 +25,7 @@ import java.util.Map;
 import l9g.webapp.maui.client.ApiClientService;
 import l9g.webapp.maui.dto.DtoApplication;
 import l9g.webapp.maui.dto.DtoApplicationPermission;
+import l9g.webapp.maui.dto.DtoErrorStatus;
 import l9g.webapp.maui.dto.DtoPerson;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -170,7 +171,7 @@ public class UserController
   }
 
   @GetMapping("/maui-api/delete-application/{id}")
-  public String deleteApplicationById(@PathVariable String id)
+  public DtoErrorStatus deleteApplicationById(@PathVariable String id)
   {
     log.debug("deleteApplicationById({})", id);
     return mauiApiClientService.deleteApplicationById(id);

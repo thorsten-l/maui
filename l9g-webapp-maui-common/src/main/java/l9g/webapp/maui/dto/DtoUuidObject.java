@@ -36,4 +36,7 @@ public class DtoUuidObject
 
   @JsonView(View.Base.class)
   private String id;
+  
+  @JsonView(View.Base.class)
+  private DtoErrorStatus errorStatus;
 }

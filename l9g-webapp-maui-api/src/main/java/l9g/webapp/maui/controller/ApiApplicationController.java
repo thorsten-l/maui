@@ -29,6 +29,7 @@ import l9g.webapp.maui.db.model.MauiApplicationPermission;
 import static l9g.webapp.maui.db.model.MauiApplicationPermission.APPLICATION_PERMISSION_OWNER;
 import l9g.webapp.maui.db.model.MauiPerson;
 import l9g.webapp.maui.dto.DtoApplication;
+import l9g.webapp.maui.dto.DtoErrorStatus;
 import l9g.webapp.maui.mapper.MauiDtoMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -137,20 +138,36 @@ public class ApiApplicationController
       findByUsernameAndId(username, id).orElseThrow(() -> new ApiException(
       "application " + id + " not found."));
 
-    updateApplication.setBaseTopic(application.getBaseTopic());
-    updateApplication.setName(application.getName());
-    updateApplication.setDescription(application.getDescription());
-    updateApplication.setExpirationDate(application.getExpirationDate());
-    updateApplication.setModifiedBy(username);
-    MauiApplication mauiApplication = applicationsRepository.save(
-      updateApplication);
+    DtoApplication dtoApplication;
+    
+    try
+    {
+      updateApplication.setBaseTopic(application.getBaseTopic());
+      updateApplication.setName(application.getName());
+      updateApplication.setDescription(application.getDescription());
+      updateApplication.setExpirationDate(application.getExpirationDate());
+      updateApplication.setModifiedBy(username);
+      MauiApplication mauiApplication = applicationsRepository.save(updateApplication);
+      dtoApplication = MauiDtoMapper.INSTANCE.mauiApplicationToApplication(mauiApplication);
+      dtoApplication.setErrorStatus(DtoErrorStatus.success());
+    }
+    catch (Throwable t)
+    {
+      dtoApplication = new DtoApplication();
+      dtoApplication.setErrorStatus(
+        new DtoErrorStatus(DtoErrorStatus.STATUS_FAILURE, 
+          DtoErrorStatus.ERROR_CODE_APPLICATION_UPDATE_FAILED,
+        "application update failed",
+        t.getMessage()
+        ));
+    }
 
-    log.debug("Response application: {}", mauiApplication);
-    return MauiDtoMapper.INSTANCE.mauiApplicationToApplication(mauiApplication);
+    log.debug("Response application: {}", dtoApplication);
+    return dtoApplication;
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<String> deleteById(
+  public ResponseEntity<DtoErrorStatus> deleteById(
     JwtAuthenticationToken jwtAuthenticationToken,
     @Parameter(description = "The application unique id", required = true)
     @PathVariable String id)
@@ -176,8 +193,7 @@ public class ApiApplicationController
 
     applicationsRepository.deleteById(id);
 
-    return ResponseEntity.ok("Application with ID " + id
-      + " successfully deleted.");
+    return ResponseEntity.ok(DtoErrorStatus.success());
   }
 
   private final MauiApplicationsRepository applicationsRepository;
