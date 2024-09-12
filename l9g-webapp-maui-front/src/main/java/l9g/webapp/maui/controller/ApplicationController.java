@@ -22,6 +22,7 @@ import java.util.List;
 import l9g.webapp.maui.client.ApiClientService;
 import l9g.webapp.maui.dto.DtoApplication;
 import l9g.webapp.maui.dto.DtoApplicationPermission;
+import l9g.webapp.maui.dto.DtoErrorStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -92,9 +93,13 @@ public class ApplicationController
       return "application";
     }
 
-    redirectAttributes.addFlashAttribute("errorStatus", new ErrorStatus(1,
-      "Application Update",
-      "Application '" + dtoApplication.getName() + "' successfully updated."));
+    DtoApplication updatedApplication = mauiApiClientService.updateApplication(
+      dtoApplication, id);
+    
+    log.info("updatedApplication={}", updatedApplication);
+    log.info("updatedApplication.errorStatus={}", updatedApplication.getErrorStatus());
+    
+    redirectAttributes.addFlashAttribute("errorStatus", updatedApplication.getErrorStatus());
 
     return "redirect:/application/" + id;
   }
@@ -106,7 +111,10 @@ public class ApplicationController
   )
   {
     log.debug("mauiApplicationDelete = {}", formApplication);
-    mauiApiClientService.deleteApplicationById(formApplication.getId());
+
+    DtoErrorStatus errorStatus = mauiApiClientService.deleteApplicationById(formApplication.getId());
+    log.info("errorStatus={}", errorStatus);
+
     return "redirect:/";
   }
 
@@ -116,10 +124,12 @@ public class ApplicationController
     DtoApplication mauiApplication
   )
   {
-    log.debug("mauiApplicationCreate = {}", mauiApplication);
+    // TODO: not implemented yet
     DtoApplication newApplication = new DtoApplication("baseTopic" + System.
       currentTimeMillis(),
       "app name", "app decription", new Date());
+
+    log.debug("mauiApplicationCreate = {}", newApplication);    
     newApplication = mauiApiClientService.createApplication(newApplication);
     log.debug("response = {}", newApplication);
     return "redirect:/";

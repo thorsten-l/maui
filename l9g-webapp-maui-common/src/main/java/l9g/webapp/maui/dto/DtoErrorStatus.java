@@ -16,6 +16,8 @@
 package l9g.webapp.maui.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonView;
+import l9g.webapp.maui.json.View;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -40,54 +42,68 @@ public class DtoErrorStatus
 
   public static final int ERROR_CODE_APPLICATION_UPDATE_FAILED = 0x0101;
 
-  private int status;
-
-  private int errorCode;
-
-  private String title;
-
-  private String message;
-
-  private String exception;
-
   public DtoErrorStatus()
   {
-    status = DtoErrorStatus.STATUS_NONE;
-    status = DtoErrorStatus.ERROR_CODE_UNDEFINED;
+    this.status = DtoErrorStatus.STATUS_NONE;
+    this.errorCode = DtoErrorStatus.ERROR_CODE_UNDEFINED;
+    this.timestamp = System.currentTimeMillis();
   }
 
-  public DtoErrorStatus(int status, int errorCode, String message, String title,
-    String exception)
+  private DtoErrorStatus(int status)
   {
+    this();
     this.status = status;
-    this.errorCode = errorCode;
-    this.message = message;
-    this.title = title;
-    this.exception = exception;
   }
 
-  public DtoErrorStatus(int status, int errorCode, String message, String exception)
-  {
-    this(status, errorCode, message, null, exception);
-  }
-
-  public DtoErrorStatus(int status, String message)
-  {
-    this(status, ERROR_CODE_UNDEFINED, message, null, null);
-  } 
-  
-  public DtoErrorStatus(int status)
-  {
-    this(status, ERROR_CODE_UNDEFINED, null, null, null);
-  }
-  
   public static final DtoErrorStatus success()
   {
     return new DtoErrorStatus(STATUS_SUCCESS);
   }
-  
+
   public static final DtoErrorStatus failure()
   {
     return new DtoErrorStatus(STATUS_FAILURE);
   }
+
+  public DtoErrorStatus title(String title)
+  {
+    this.title = title;
+    return this;
+  }
+  
+  public DtoErrorStatus message(String message)
+  {
+    this.message = message;
+    return this;
+  }
+  
+  public DtoErrorStatus errorCode(int errorCode)
+  {
+    this.errorCode = errorCode;
+    return this;
+  }
+  
+  public DtoErrorStatus exception(String exception)
+  {
+    this.exception = exception;
+    return this;
+  }
+  
+  @JsonView(View.Base.class)
+  private int status;
+
+  @JsonView(View.Base.class)
+  private int errorCode;
+
+  @JsonView(View.Base.class)
+  private String title;
+
+  @JsonView(View.Base.class)
+  private String message;
+
+  @JsonView(View.Base.class)
+  private String exception;
+
+  @JsonView(View.Base.class)
+  private final long timestamp;
 }

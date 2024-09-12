@@ -114,8 +114,11 @@ public class ApiApplicationController
       username, mauiPerson, mauiApplication,
       APPLICATION_PERMISSION_OWNER));
 
-    log.debug("Response application: {}", mauiApplication);
-    return MauiDtoMapper.INSTANCE.mauiApplicationToApplication(mauiApplication);
+    DtoApplication dtoApplication = MauiDtoMapper.INSTANCE.
+      mauiApplicationToApplication(mauiApplication);
+    dtoApplication.setErrorStatus(DtoErrorStatus.success());
+    log.debug("Response application: {}", dtoApplication);
+    return dtoApplication;
   }
 
   @PostMapping("/{id}")
@@ -139,7 +142,7 @@ public class ApiApplicationController
       "application " + id + " not found."));
 
     DtoApplication dtoApplication;
-    
+
     try
     {
       updateApplication.setBaseTopic(application.getBaseTopic());
@@ -147,19 +150,23 @@ public class ApiApplicationController
       updateApplication.setDescription(application.getDescription());
       updateApplication.setExpirationDate(application.getExpirationDate());
       updateApplication.setModifiedBy(username);
-      MauiApplication mauiApplication = applicationsRepository.save(updateApplication);
-      dtoApplication = MauiDtoMapper.INSTANCE.mauiApplicationToApplication(mauiApplication);
-      dtoApplication.setErrorStatus(DtoErrorStatus.success());
+      MauiApplication mauiApplication = applicationsRepository.save(
+        updateApplication);
+      dtoApplication = MauiDtoMapper.INSTANCE.mauiApplicationToApplication(
+        mauiApplication);
+      dtoApplication.setErrorStatus(DtoErrorStatus.success().title(
+        "Application Update").message("Update succeed."));
     }
     catch (Throwable t)
     {
       dtoApplication = new DtoApplication();
       dtoApplication.setErrorStatus(
-        new DtoErrorStatus(DtoErrorStatus.STATUS_FAILURE, 
-          DtoErrorStatus.ERROR_CODE_APPLICATION_UPDATE_FAILED,
-        "application update failed",
-        t.getMessage()
-        ));
+        DtoErrorStatus.failure()
+          .errorCode(DtoErrorStatus.ERROR_CODE_APPLICATION_UPDATE_FAILED)
+          .title("Application Update")
+          .message("Application update failed.")
+          .exception(t.getMessage())
+      );
     }
 
     log.debug("Response application: {}", dtoApplication);

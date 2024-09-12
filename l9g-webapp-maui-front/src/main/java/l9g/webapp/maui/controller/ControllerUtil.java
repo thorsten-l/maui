@@ -15,6 +15,7 @@
  */
 package l9g.webapp.maui.controller;
 
+import ch.qos.logback.core.status.ErrorStatus;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import java.util.List;
@@ -24,6 +25,7 @@ import java.util.concurrent.TimeUnit;
 import l9g.webapp.maui.client.ApiClientService;
 import l9g.webapp.maui.dto.DtoApplication;
 import l9g.webapp.maui.dto.DtoApplicationPermission;
+import l9g.webapp.maui.dto.DtoErrorStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Component;
@@ -115,11 +117,10 @@ public class ControllerUtil
     log.debug("defaultModelAttributes username={} {} {}", principal.
       getPreferredUsername(), applicationId, uuid);
 
-    Optional<ErrorStatus> optionalErrorStatus = Optional.ofNullable(
-      (ErrorStatus) model.getAttribute("errorStatus"));
+    Optional<DtoErrorStatus> optionalErrorStatus = Optional.ofNullable(
+      (DtoErrorStatus) model.getAttribute("errorStatus"));
 
-    model.addAttribute("errorStatus", optionalErrorStatus.orElse(
-      new ErrorStatus(0, null, null)));
+    model.addAttribute("errorStatus", optionalErrorStatus.orElse(new DtoErrorStatus()));
 
     if (applicationId != null)
     {
