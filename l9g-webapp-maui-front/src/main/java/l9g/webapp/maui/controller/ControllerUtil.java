@@ -15,7 +15,6 @@
  */
 package l9g.webapp.maui.controller;
 
-import ch.qos.logback.core.status.ErrorStatus;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import java.util.List;
@@ -135,12 +134,15 @@ public class ControllerUtil
         == DtoApplicationPermission.APPLICATION_PERMISSION_OWNER
         || ownApplicationPermission.getPermissions()
         == DtoApplicationPermission.APPLICATION_PERMISSION_MANAGER);
+      model.addAttribute("mauiConsumer", ownApplicationPermission.getPermissions()
+        == DtoApplicationPermission.APPLICATION_PERMISSION_CONSUMER);
     }
     else
     {
       model.addAttribute("mauiOwnApplicationPermission",
         DtoApplicationPermission.APPLICATION_PERMISSION_NONE);
       model.addAttribute("mauiOwnerOrManager", false);
+      model.addAttribute("mauiConsumer", true);
     }
 
     model.addAttribute("fullname", principal.getFullName());

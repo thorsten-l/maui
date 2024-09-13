@@ -22,7 +22,7 @@
               <th width='15%'><span th:text="#{name}" th:remove="tags">name</span></th>
               <td>
                 <div class="form-group">
-                  <input type="text" class="form-control" th:field="*{name}"/>
+                  <input type="text" class="form-control" th:field="*{name}" th:attr="readonly=${mauiConsumer}"/>
                   <div th:if="${#fields.hasErrors('name')}" class="text-danger">
                     <span th:errors="*{name}"></span>
                   </div>
@@ -31,13 +31,13 @@
             </tr>
             <tr>
               <th width='15%'><span th:text="#{description}" th:remove="tags">description</span></th>
-              <td><input type="text" class="form-control" th:field="*{description}"/></td>
+              <td><input type="text" class="form-control" th:field="*{description}" th:attr="readonly=${mauiConsumer}"/></td>
             </tr>
             <tr>
               <th width='15%'><span th:text="#{base_topic}" th:remove="tags">base_topic</span></th>
               <td>
                 <div class="form-group">
-                  <input type="text" class="form-control" th:field="*{baseTopic}"/>
+                  <input type="text" class="form-control" th:field="*{baseTopic}" th:attr="readonly=${mauiConsumer}"/>
                   <div th:if="${#fields.hasErrors('baseTopic')}" class="text-danger">
                     <span th:errors="*{baseTopic}"></span>
                   </div>
@@ -48,8 +48,8 @@
               <th width='15%'><span th:text="#{expiration_date}" th:remove="tags">expiration_date</span></th>
               <td>                
                 <div class="input-group date" id="datepicker">
-                  <input type="text" class="form-control" th:field="*{expirationDate}" />
-                  <span class="input-group-append">
+                  <input type="text" class="form-control" th:field="*{expirationDate}" th:attr="readonly=${mauiConsumer}"/>
+                  <span class="input-group-append" th:if="${mauiOwnerOrManager}">
                     <span class="input-group-text bg-light d-block">
                       <i class="mdi mdi-calendar-month"></i>
                     </span>
@@ -59,7 +59,7 @@
             </tr>
           </tbody>
         </table>
-        <div class="d-flex justify-content-end">
+        <div class="d-flex justify-content-end" th:if="${mauiOwnerOrManager}">
           <button type="reset" class="btn btn-secondary me-2">Reset</button>
           <button type="submit" class="btn btn-primary">Save</button>
         </div>
@@ -184,7 +184,7 @@
 
     <div th:replace="~{fragments::mauiFooter}"></div>
 
-    <script>
+    <script th:if="${mauiOwnerOrManager}">
       $(document).ready(function () {
 
         var today = new Date();
