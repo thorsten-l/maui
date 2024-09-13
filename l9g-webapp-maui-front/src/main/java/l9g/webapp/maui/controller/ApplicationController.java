@@ -23,6 +23,8 @@ import l9g.webapp.maui.client.ApiClientService;
 import l9g.webapp.maui.dto.DtoApplication;
 import l9g.webapp.maui.dto.DtoApplicationPermission;
 import l9g.webapp.maui.dto.DtoErrorStatus;
+import l9g.webapp.maui.form.FormApplication;
+import l9g.webapp.maui.form.FormDtoMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -64,7 +66,7 @@ public class ApplicationController
     log.debug("personPermissions={}", personPermissions);
 
     model.addAttribute("mauiApplication", application);
-    model.addAttribute("dtoApplication", application);
+    model.addAttribute("formApplication", FormDtoMapper.INSTANCE.dtoApplicationToFormApplication(application));
     model.addAttribute("mauiPersonPermissions", personPermissions);
     return "application";
   }
@@ -74,11 +76,11 @@ public class ApplicationController
     @AuthenticationPrincipal DefaultOidcUser principal,
     @PathVariable String id,
     RedirectAttributes redirectAttributes,
-    @Valid @ModelAttribute("dtoApplication") DtoApplication dtoApplication, BindingResult bindingResult, Model model)
+    @Valid @ModelAttribute("formApplication") FormApplication formApplication, BindingResult bindingResult, Model model)
   {
     log.debug("mauiApplication id={}", id);
     controllerUtil.defaultModelAttributes(principal, model, false, id);
-    log.debug("dtoApplication={}", dtoApplication);
+    log.debug("formApplication={}", formApplication);
 
     if (bindingResult.hasErrors())
     {
@@ -86,15 +88,15 @@ public class ApplicationController
       DtoApplication application = mauiApiClientService.findApplicationById(id);
       List<DtoApplicationPermission> personPermissions
         = mauiApiClientService.findPersonPermissions(id);
-      model.addAttribute("dtoApplication", dtoApplication);
+      model.addAttribute("formApplication", formApplication);
       model.addAttribute("mauiApplication", application);
       model.addAttribute("mauiPersonPermissions", personPermissions);
       log.debug("show errors....");
       return "application";
     }
-
+    
     DtoApplication updatedApplication = mauiApiClientService.updateApplication(
-      dtoApplication, id);
+      FormDtoMapper.INSTANCE.formApplicationToDtoApplication(formApplication), id);
     
     log.info("updatedApplication={}", updatedApplication);
     log.info("updatedApplication.errorStatus={}", updatedApplication.getErrorStatus());

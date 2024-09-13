@@ -160,7 +160,7 @@ public class ApiClientService
 
   public DtoApplication findApplicationById(String id)
   {
-    log.debug("findApplications");
+    log.debug("findApplications {}", id );
 
     return restClient
       .get()
@@ -168,6 +168,20 @@ public class ApiClientService
       .header("Authorization", "Bearer " + getBearer())
       .retrieve()
       .body(new ParameterizedTypeReference<DtoApplication>()
+      {
+      });
+  }
+
+  public DtoErrorStatus baseTopicUnique(String id, String baseTopic)
+  {
+    log.debug("baseTopicUnique {} '{}'", id, baseTopic);
+
+    return restClient
+      .get()
+      .uri("/api/v1/application/{id}/basetopic/{baseTopic}", id, baseTopic)
+      .header("Authorization", "Bearer " + getBearer())
+      .retrieve()
+      .body(new ParameterizedTypeReference<DtoErrorStatus>()
       {
       });
   }

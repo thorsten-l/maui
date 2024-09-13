@@ -41,7 +41,8 @@ public class DtoErrorStatus
   public static final int ERROR_CODE_UNDEFINED = 0;
 
   public static final int ERROR_CODE_APPLICATION_UPDATE_FAILED = 0x0101;
-  public static final int ERROR_CODE_BASE_TOPIC_EXISTS = 0x0201;
+
+  public static final int ERROR_CODE_BASE_TOPIC_UNIQUE = 0x0201;
 
   public DtoErrorStatus()
   {
@@ -71,25 +72,25 @@ public class DtoErrorStatus
     this.title = title;
     return this;
   }
-  
+
   public DtoErrorStatus message(String message)
   {
     this.message = message;
     return this;
   }
-  
+
   public DtoErrorStatus errorCode(int errorCode)
   {
     this.errorCode = errorCode;
     return this;
   }
-  
+
   public DtoErrorStatus exception(String exception)
   {
     this.exception = exception;
     return this;
   }
-  
+
   @JsonView(View.Base.class)
   private int status;
 

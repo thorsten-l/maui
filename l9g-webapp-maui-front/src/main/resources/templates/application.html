@@ -11,7 +11,7 @@
     <div class="container">
       <h1 style="margin-top: 0.5em; margin-bottom: 1em;"><span th:text="#{application}" th:remove="tags">application</span>: <span th:text='${mauiApplication.name}' th:remove="tags"></span></h1>
 
-      <form th:action="@{/application/{id}(id=${dtoApplication.id})}" th:object="${dtoApplication}" th:method="POST">
+      <form th:action="@{/application/{id}(id=${formApplication.id})}" th:object="${formApplication}" th:method="POST">
         <table class="table table-striped">
           <tbody>
             <tr>

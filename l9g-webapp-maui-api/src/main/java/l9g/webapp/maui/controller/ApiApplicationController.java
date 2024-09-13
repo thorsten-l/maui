@@ -34,7 +34,6 @@ import l9g.webapp.maui.dto.DtoErrorStatus;
 import l9g.webapp.maui.mapper.MauiDtoMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -75,21 +74,55 @@ public class ApiApplicationController
       : List.of();
   }
 
-  @GetMapping("/basetopic/{baseTopic}")
-  public DtoErrorStatus baseTopicExists(
+  @GetMapping("/{id}")
+  @JsonView(View.Application.class)
+  public DtoApplication findById(
+    JwtAuthenticationToken jwtAuthenticationToken,
     @Parameter(description = "The application unique id", required = true)
+    @PathVariable String id)
+  {
+    log.debug("findByUsernameAndId()");
+
+    String username = JwtUtil
+      .usernameFromAuthenticationToken(jwtAuthenticationToken);
+
+    return MauiDtoMapper.INSTANCE.mauiApplicationToApplication(
+      applicationsRepository.
+        findByUsernameAndId(username, id).orElseThrow(() -> new ApiException(
+        "application " + id + " not found.")));
+  }
+
+  @GetMapping("{id}/basetopic/{baseTopic}")
+  public DtoErrorStatus baseTopicUnique(
+    @Parameter(description = "The application unique id", required = true)
+    @PathVariable String id,
     @PathVariable String baseTopic
   )
   {
-    log.debug("baseTopicExists() '{}'", baseTopic);
+    log.debug("baseTopicUnique() {}, '{}'", id, baseTopic);
 
     Optional<MauiApplication> optional = applicationsRepository.findByBaseTopic(
       baseTopic);
 
-    DtoErrorStatus errorStatus = optional.isPresent()
-      ? DtoErrorStatus.success().errorCode(
-        DtoErrorStatus.ERROR_CODE_BASE_TOPIC_EXISTS)
-      : DtoErrorStatus.success();
+    DtoErrorStatus errorStatus;
+
+    if (optional.isPresent())
+    {
+      if (id.equals(optional.get().getId()))
+      {
+        errorStatus = DtoErrorStatus.success().errorCode(
+          DtoErrorStatus.ERROR_CODE_BASE_TOPIC_UNIQUE);
+      }
+      else
+      {
+        errorStatus = DtoErrorStatus.success();
+      }
+    }
+    else
+    {
+      errorStatus = DtoErrorStatus.success().errorCode(
+        DtoErrorStatus.ERROR_CODE_BASE_TOPIC_UNIQUE);
+    }
 
     log.debug("{}", errorStatus);
     return errorStatus;
