@@ -17,8 +17,6 @@ package l9g.webapp.maui.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 import l9g.webapp.maui.json.View;
@@ -26,7 +24,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  *
@@ -50,19 +47,15 @@ public class DtoApplication extends DtoUuidObject
   }
 
   @JsonView(View.Base.class)
-  @NotBlank(message = "{error.baseTopic.notBlank}")
   private String baseTopic;
 
   @JsonView(View.Base.class)
-  @NotBlank(message = "{error.name.notBlank}")
   private String name;
 
   @JsonView(View.Base.class)
   private String description;
 
   @JsonView(View.Base.class)
-  @DateTimeFormat(pattern = "yyyy-MM-dd")
-  @NotNull(message = "{error.expirationDate.notNull}")
   private Date expirationDate;
 
   @JsonView(
