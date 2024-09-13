@@ -41,6 +41,7 @@ public class DtoErrorStatus
   public static final int ERROR_CODE_UNDEFINED = 0;
 
   public static final int ERROR_CODE_APPLICATION_UPDATE_FAILED = 0x0101;
+  public static final int ERROR_CODE_BASE_TOPIC_EXISTS = 0x0201;
 
   public DtoErrorStatus()
   {
