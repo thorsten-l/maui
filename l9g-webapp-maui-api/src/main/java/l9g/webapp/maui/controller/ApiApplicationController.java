@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
+import java.util.Optional;
 import l9g.webapp.maui.db.MauiApplicationPermissionsRepository;
 import l9g.webapp.maui.db.MauiApplicationsRepository;
 import l9g.webapp.maui.db.MauiPersonsRepository;
@@ -33,6 +34,7 @@ import l9g.webapp.maui.dto.DtoErrorStatus;
 import l9g.webapp.maui.mapper.MauiDtoMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -73,22 +75,24 @@ public class ApiApplicationController
       : List.of();
   }
 
-  @GetMapping("/{id}")
-  @JsonView(View.Application.class)
-  public DtoApplication findById(
-    JwtAuthenticationToken jwtAuthenticationToken,
+  @GetMapping("/basetopic/{baseTopic}")
+  public DtoErrorStatus baseTopicExists(
     @Parameter(description = "The application unique id", required = true)
-    @PathVariable String id)
+    @PathVariable String baseTopic
+  )
   {
-    log.debug("findByUsernameAndId()");
+    log.debug("baseTopicExists() '{}'", baseTopic);
 
-    String username = JwtUtil
-      .usernameFromAuthenticationToken(jwtAuthenticationToken);
+    Optional<MauiApplication> optional = applicationsRepository.findByBaseTopic(
+      baseTopic);
 
-    return MauiDtoMapper.INSTANCE.mauiApplicationToApplication(
-      applicationsRepository.
-        findByUsernameAndId(username, id).orElseThrow(() -> new ApiException(
-        "application " + id + " not found.")));
+    DtoErrorStatus errorStatus = optional.isPresent()
+      ? DtoErrorStatus.success().errorCode(
+        DtoErrorStatus.ERROR_CODE_BASE_TOPIC_EXISTS)
+      : DtoErrorStatus.success();
+
+    log.debug("{}", errorStatus);
+    return errorStatus;
   }
 
   @PutMapping()
