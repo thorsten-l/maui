@@ -21,6 +21,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
@@ -62,5 +63,6 @@ public class MauiApplicationPermission extends MauiUuidObject
   @ToString.Exclude
   private MauiApplication application;
   
+  @Setter
   private int permissions;
 }

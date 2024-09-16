@@ -108,4 +108,4 @@ maui:
   oauth2:
     registration-id: "iddev"
     client-id: "maui"
-  debug-oidc: true
+  debug-oidc: false

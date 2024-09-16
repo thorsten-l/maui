@@ -43,6 +43,8 @@ public class DtoErrorStatus
   public static final int ERROR_CODE_APPLICATION_UPDATE_FAILED = 0x0101;
 
   public static final int ERROR_CODE_BASE_TOPIC_UNIQUE = 0x0201;
+  
+  public static final int ERROR_CODE_APPLICATION_PERMISSIONS_UPDATE_FAILED = 0x0301;
 
   public DtoErrorStatus()
   {

@@ -56,7 +56,7 @@ public class ControllerUtil
   {
     List<DtoApplicationPermission> cachedPermissions
       = applicationPermissionCache.getIfPresent(username);
-
+    
     if (forceReload || cachedPermissions == null)
     {
       log.
@@ -78,13 +78,19 @@ public class ControllerUtil
     return username + ";" + applicationId;
   }
 
+  public void invalidateAllApplicationPermissionsCaches()
+  {
+    this.applicationPermissionCache.invalidateAll();
+    this.ownApplicationPermissionCache.invalidateAll();
+  }
+  
   public DtoApplicationPermission cachedOwnApplicationPermissions(
     String username, String applicationId, boolean forceReload)
   {
     String cacheKey = ownCacheKey(username, applicationId);
     DtoApplicationPermission cachedPermissions
       = ownApplicationPermissionCache.getIfPresent(cacheKey);
-
+    
     if (forceReload || cachedPermissions == null)
     {
       log.
@@ -102,7 +108,7 @@ public class ControllerUtil
     }
     return cachedPermissions;
   }
-
+  
   public void invalidateCachedOwnApplicationPermissions(
     String username, String applicationId)
   {
@@ -123,19 +129,31 @@ public class ControllerUtil
 
     if (applicationId != null)
     {
+      
       DtoApplicationPermission ownApplicationPermission
         = cachedOwnApplicationPermissions(
           principal.getPreferredUsername(), applicationId, forceReloadCache);
+      
+      
+      
       log.debug("own application permission = {}", ownApplicationPermission);
+
       model.addAttribute("mauiOwnApplicationPermission",
         ownApplicationPermission.getPermissions());
+      
+      model.addAttribute("mauiOwnPerson", ownApplicationPermission.getPerson());
+
       model.addAttribute("mauiOwnerOrManager",
         ownApplicationPermission.getPermissions()
         == DtoApplicationPermission.APPLICATION_PERMISSION_OWNER
         || ownApplicationPermission.getPermissions()
         == DtoApplicationPermission.APPLICATION_PERMISSION_MANAGER);
+      
       model.addAttribute("mauiConsumer", ownApplicationPermission.getPermissions()
         == DtoApplicationPermission.APPLICATION_PERMISSION_CONSUMER);
+      
+      model.addAttribute("mauiOwner", ownApplicationPermission.getPermissions()
+        == DtoApplicationPermission.APPLICATION_PERMISSION_OWNER);
     }
     else
     {

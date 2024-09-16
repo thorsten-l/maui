@@ -69,7 +69,7 @@ public class ApiApplicationController
       .usernameFromAuthenticationToken(jwtAuthenticationToken);
 
     return username != null
-      ? MauiDtoMapper.INSTANCE.mauiApplicationToApplicationList(
+      ? MauiDtoMapper.INSTANCE.mauiApplicationListToDtoApplicationList(
         applicationsRepository.findByUsername(username))
       : List.of();
   }

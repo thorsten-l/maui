@@ -115,7 +115,7 @@
       <div th:if="${mauiOwnerOrManager}" th:remove="tags">
         <h2 style="margin-top: 1em;">
           <a class="btn btn-dark" 
-             th:href="@{/}">
+             th:href="@{/}" th:if="${mauiOwner}">
             <span class="mdi mdi-plus-thick"></span>
           </a>  
           <span th:text="#{coworker}" th:remove="tags">coworker</span>
@@ -134,7 +134,16 @@
               <td th:text="${entry.person.firstname}"></td>
               <td th:text="${entry.person.lastname}"></td>
               <td th:text="${entry.person.email}"></td>
-              <td th:text="#{'application_permissions.' + ${entry.permissions}}"></td>
+              <td>
+                <span th:if="${mauiOwner == false || entry.person.id == mauiOwnPerson.id }" th:remove="tags" th:text="#{'application_permissions.' + ${entry.permissions}}"></span>
+                <form th:if="${mauiOwner == true && entry.person.id != mauiOwnPerson.id}" th:action="@{/application-permissions/{id}/{applicationId}(id=${entry.id}, applicationId=${mauiApplication.id})}" method="post">
+                  <select class="form-select" name="permissions" th:value="${entry.permissions}" onchange="this.form.submit()">
+                    <option value="1" th:text="#{application_permissions.1}" th:selected="${entry.permissions == 1}"></option>
+                    <option value="2" th:text="#{application_permissions.2}" th:selected="${entry.permissions == 2}"></option>
+                    <option value="3" th:text="#{application_permissions.3}" th:selected="${entry.permissions == 3}"></option>
+                  </select>
+                </form>
+              </td>
             </tr>
           </tbody>
         </table>

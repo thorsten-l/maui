@@ -35,11 +35,11 @@ public interface MauiDtoMapper
   public DtoApplication mauiApplicationToApplication(
     MauiApplication mauiApplication);
 
-  public List<DtoApplication> mauiApplicationToApplicationList(
+  public List<DtoApplication> mauiApplicationListToDtoApplicationList(
     List<MauiApplication> mauiApplication);
 
   // DtoApplicationPermission
-  public DtoApplicationPermission mauiApplicationPermissionToApplicationPermission(
+  public DtoApplicationPermission mauiApplicationPermissionToDtoApplicationPermission(
     MauiApplicationPermission mauiApplicationPermission);
 
   public List<DtoApplicationPermission> mauiApplicationPermissionToApplicationPermissionList(

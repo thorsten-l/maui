@@ -160,7 +160,7 @@ public class ApiClientService
 
   public DtoApplication findApplicationById(String id)
   {
-    log.debug("findApplications {}", id );
+    log.debug("findApplications {}", id);
 
     return restClient
       .get()
@@ -223,7 +223,7 @@ public class ApiClientService
 
   public DtoApplication updateApplication(DtoApplication app, String id)
   {
-    log.debug("createApplication");
+    log.debug("updateApplication");
 
     return restClient
       .post()
@@ -232,6 +232,23 @@ public class ApiClientService
       .body(app)
       .retrieve()
       .body(new ParameterizedTypeReference<DtoApplication>()
+      {
+      });
+  }
+
+  public DtoApplicationPermission updateApplicationPermission(
+    String id, DtoApplicationPermission applicationPermission)
+  {
+    log.debug("updateApplicationPermission id={}, applicationPermission={}", id,
+      applicationPermission);
+
+    return restClient
+      .post()
+      .uri("/api/v1/application-permission/{id}", id)
+      .header("Authorization", "Bearer " + getBearer())
+      .body(applicationPermission)
+      .retrieve()
+      .body(new ParameterizedTypeReference<DtoApplicationPermission>()
       {
       });
   }

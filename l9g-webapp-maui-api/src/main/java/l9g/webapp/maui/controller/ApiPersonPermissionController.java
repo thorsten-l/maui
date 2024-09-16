@@ -92,7 +92,7 @@ public class ApiPersonPermissionController
           .findByUsernameAndApplicationId(person.getUsername(), id);
 
       permission = MauiDtoMapper.INSTANCE
-        .mauiApplicationPermissionToApplicationPermission(
+        .mauiApplicationPermissionToDtoApplicationPermission(
           optional.orElseThrow(
             () ->
           {

@@ -16,11 +16,9 @@
 package l9g.webapp.maui.form;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.util.Date;
-import l9g.webapp.maui.json.View;
 import l9g.webapp.maui.validator.annotation.UniqueBaseTopic;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,18 +38,14 @@ import org.springframework.format.annotation.DateTimeFormat;
 @UniqueBaseTopic(message = "{error.baseTopic.unique}")
 public class FormApplication extends FormUuidObject
 {
-  @JsonView(View.Base.class)
   @NotBlank(message = "{error.baseTopic.notBlank}")
   private String baseTopic;
 
-  @JsonView(View.Base.class)
   @NotBlank(message = "{error.name.notBlank}")
   private String name;
 
-  @JsonView(View.Base.class)
   private String description;
 
-  @JsonView(View.Base.class)
   @DateTimeFormat(pattern = "yyyy-MM-dd")
   @NotNull(message = "{error.expirationDate.notNull}")
   private Date expirationDate;

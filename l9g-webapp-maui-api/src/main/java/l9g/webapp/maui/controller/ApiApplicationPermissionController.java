@@ -22,9 +22,11 @@ import java.util.List;
 import java.util.Optional;
 import l9g.webapp.maui.db.MauiApplicationPermissionsRepository;
 import l9g.webapp.maui.db.MauiPersonsRepository;
+import l9g.webapp.maui.db.model.MauiApplicationPermission;
 import l9g.webapp.maui.json.View;
 import l9g.webapp.maui.db.model.MauiPerson;
 import l9g.webapp.maui.dto.DtoApplicationPermission;
+import l9g.webapp.maui.dto.DtoErrorStatus;
 import l9g.webapp.maui.mapper.MauiDtoMapper;
 import l9g.webapp.maui.util.PasswordGeneratorService;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +35,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -65,11 +70,69 @@ public class ApiApplicationPermissionController
     }
 
     log.debug("person={}", person);
-    
+
     return person != null && person.getUsername() != null
-      ? MauiDtoMapper.INSTANCE.mauiApplicationPermissionToApplicationPermissionList(
-        applicationPermissionsRepository.findByUsername(person.getUsername()))
+      ? MauiDtoMapper.INSTANCE.
+        mauiApplicationPermissionToApplicationPermissionList(
+          applicationPermissionsRepository.findByUsername(person.getUsername()))
       : List.of();
+  }
+
+  @PostMapping(path = "/{id}")
+  @JsonView(View.ApplicationPermissionApplication.class)
+  public DtoApplicationPermission updateById(
+    JwtAuthenticationToken jwtAuthenticationToken,
+    @PathVariable String id,
+    @RequestBody DtoApplicationPermission applicationPermission)
+  {
+    log.debug("updateById() name={}", jwtAuthenticationToken.getName());
+    log.debug("updateById() id={}, applicationPermission={}", id,
+      applicationPermission);
+
+    String username = JwtUtil
+      .usernameFromAuthenticationToken(jwtAuthenticationToken);
+
+    MauiApplicationPermission updateApplicationPermission
+      = applicationPermissionsRepository.findById(id).orElseThrow(
+        () -> new ApiException(
+          "application permissions " + id + " not found."));
+
+    DtoApplicationPermission dtoApplicationPermission;
+
+    try
+    {
+      updateApplicationPermission.setPermissions(applicationPermission.
+        getPermissions());
+      updateApplicationPermission.setModifiedBy(username);
+
+      MauiApplicationPermission mauiApplicationPermission
+        = applicationPermissionsRepository.save(updateApplicationPermission);
+
+      dtoApplicationPermission
+        = MauiDtoMapper.INSTANCE
+          .mauiApplicationPermissionToDtoApplicationPermission(
+            mauiApplicationPermission);
+
+      dtoApplicationPermission.setErrorStatus(DtoErrorStatus.success().title(
+        "Application permissions update").message("Update succeed."));
+    }
+    catch (Throwable t)
+    {
+      dtoApplicationPermission = new DtoApplicationPermission();
+      dtoApplicationPermission.setId(id);
+      dtoApplicationPermission.setErrorStatus(
+        DtoErrorStatus.failure()
+          .errorCode(
+            DtoErrorStatus.ERROR_CODE_APPLICATION_PERMISSIONS_UPDATE_FAILED)
+          .title("Application Permissions Update")
+          .message("Application Permissions update failed.")
+          .exception(t.getMessage())
+      );
+    }
+
+    log.debug("Response application: {}", dtoApplicationPermission);
+
+    return dtoApplicationPermission;
   }
 
   private MauiPerson updateOrInsertWithTTL(MauiPerson person)
