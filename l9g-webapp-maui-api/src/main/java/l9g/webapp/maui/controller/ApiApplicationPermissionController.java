@@ -73,7 +73,7 @@ public class ApiApplicationPermissionController
 
     return person != null && person.getUsername() != null
       ? MauiDtoMapper.INSTANCE.
-        mauiApplicationPermissionToApplicationPermissionList(
+        mauiApplicationPermissionToDtoApplicationPermissionList(
           applicationPermissionsRepository.findByUsername(person.getUsername()))
       : List.of();
   }
@@ -133,6 +133,62 @@ public class ApiApplicationPermissionController
     log.debug("Response application: {}", dtoApplicationPermission);
 
     return dtoApplicationPermission;
+  }
+
+  @GetMapping("/{id}/persons")
+  @JsonView(View.ApplicationPermissionPerson.class)
+  public List<DtoApplicationPermission> findByUsernameAndApplicationId(
+    JwtAuthenticationToken jwtAuthenticationToken,
+    @PathVariable String id)
+  {
+    log.debug("findByUsernameAndApplicationId() name={} id={}",
+      jwtAuthenticationToken.getName(), id);
+
+    MauiPerson person = JwtUtil.personFromAuthenticationToken(
+      jwtAuthenticationToken);
+
+    log.debug("person={}", person);
+
+    return person != null && person.getUsername() != null
+      ? MauiDtoMapper.INSTANCE.mauiApplicationPermissionToDtoApplicationPermissionList(
+          applicationPermissionsRepository.findByApplicationId(id))
+      : List.of();
+  }
+
+  @GetMapping("/{id}/own")
+  @JsonView(View.ApplicationPermissionPerson.class)
+  public DtoApplicationPermission findOwnByUsernameAndApplicationId(
+    JwtAuthenticationToken jwtAuthenticationToken,
+    @PathVariable String id)
+  {
+    log.debug("findOwnByUsernameAndApplicationId() name={} id={}",
+      jwtAuthenticationToken.getName(), id);
+
+    MauiPerson person = JwtUtil.personFromAuthenticationToken(
+      jwtAuthenticationToken);
+
+    log.debug("person={}", person);
+
+    DtoApplicationPermission permission = null;
+
+    if (person != null && person.getUsername() != null)
+    {
+      Optional<MauiApplicationPermission> optional
+        = applicationPermissionsRepository
+          .findByUsernameAndApplicationId(person.getUsername(), id);
+
+      permission = MauiDtoMapper.INSTANCE
+        .mauiApplicationPermissionToDtoApplicationPermission(
+          optional.orElseThrow(
+            () ->
+          {
+            throw new ApiException("own permissions not found");
+          }
+          ));
+      log.debug("own application permissions = {}", permission);
+    }
+
+    return permission;
   }
 
   private MauiPerson updateOrInsertWithTTL(MauiPerson person)

@@ -122,7 +122,7 @@ public class ApiClientService
 
     return restClient
       .get()
-      .uri("/api/v1/person-permission/{id}", id)
+      .uri("/api/v1/application-permission/{id}/persons", id)
       .header("Authorization", "Bearer " + getBearer())
       .retrieve()
       .body(new ParameterizedTypeReference<List<DtoApplicationPermission>>()
@@ -136,7 +136,7 @@ public class ApiClientService
 
     return restClient
       .get()
-      .uri("/api/v1/person-permission/own/{id}", id)
+      .uri("/api/v1/application-permission/{id}/own", id)
       .header("Authorization", "Bearer " + getBearer())
       .retrieve()
       .body(new ParameterizedTypeReference<DtoApplicationPermission>()

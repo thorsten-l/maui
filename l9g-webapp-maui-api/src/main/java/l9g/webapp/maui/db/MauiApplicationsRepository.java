@@ -32,7 +32,8 @@ public interface MauiApplicationsRepository extends
 {
   @Query(
     "SELECT a FROM MauiApplication a, MauiApplicationPermission ap, MauiPerson pe "
-    + "WHERE ap.person.id = pe.id AND pe.username = :username AND ap.application.id = a.id")
+    + "WHERE ap.person.id = pe.id AND pe.username = :username AND ap.application.id = a.id "
+    + "order by a.name")
   List<MauiApplication> findByUsername(String username);
 
   @Query("SELECT a FROM MauiApplication a WHERE a.baseTopic = :baseTopic")

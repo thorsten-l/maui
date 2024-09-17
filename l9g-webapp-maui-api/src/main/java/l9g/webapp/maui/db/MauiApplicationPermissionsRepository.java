@@ -35,8 +35,9 @@ public interface MauiApplicationPermissionsRepository extends
   long countPermissionsByApplicationIdAndPermission(String applicationId,
     int permission);
   
-  @Query("SELECT ap FROM MauiApplicationPermission ap, MauiPerson pe "
-    + "WHERE ap.person.id = pe.id AND pe.username = :username")
+  @Query("SELECT ap FROM MauiApplicationPermission ap, MauiPerson pe, MauiApplication a "
+    + "WHERE ap.person.id = pe.id AND pe.username = :username AND ap.application.id = a.id "
+    + "ORDER BY a.name")
   List<MauiApplicationPermission> findByUsername(String username);  
   
   @Query("SELECT ap FROM MauiApplicationPermission ap "

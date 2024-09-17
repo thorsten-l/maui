@@ -63,8 +63,7 @@ public class ApiPersonPermissionController
     log.debug("person={}", person);
 
     return person != null && person.getUsername() != null
-      ? MauiDtoMapper.INSTANCE.
-        mauiApplicationPermissionToApplicationPermissionList(
+      ? MauiDtoMapper.INSTANCE.mauiApplicationPermissionToDtoApplicationPermissionList(
           applicationPermissionsRepository.findByApplicationId(id))
       : List.of();
   }

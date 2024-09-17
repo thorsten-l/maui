@@ -86,7 +86,7 @@ public class ApiApplicationController
     String username = JwtUtil
       .usernameFromAuthenticationToken(jwtAuthenticationToken);
 
-    return MauiDtoMapper.INSTANCE.mauiApplicationToApplication(
+    return MauiDtoMapper.INSTANCE.mauiApplicationToDtoApplication(
       applicationsRepository.
         findByUsernameAndId(username, id).orElseThrow(() -> new ApiException(
         "application " + id + " not found.")));
@@ -151,8 +151,7 @@ public class ApiApplicationController
       username, mauiPerson, mauiApplication,
       APPLICATION_PERMISSION_OWNER));
 
-    DtoApplication dtoApplication = MauiDtoMapper.INSTANCE.
-      mauiApplicationToApplication(mauiApplication);
+    DtoApplication dtoApplication = MauiDtoMapper.INSTANCE.mauiApplicationToDtoApplication(mauiApplication);
     dtoApplication.setErrorStatus(DtoErrorStatus.success());
     log.debug("Response application: {}", dtoApplication);
     return dtoApplication;
@@ -189,7 +188,7 @@ public class ApiApplicationController
       updateApplication.setModifiedBy(username);
       MauiApplication mauiApplication = applicationsRepository.save(
         updateApplication);
-      dtoApplication = MauiDtoMapper.INSTANCE.mauiApplicationToApplication(
+      dtoApplication = MauiDtoMapper.INSTANCE.mauiApplicationToDtoApplication(
         mauiApplication);
       dtoApplication.setErrorStatus(DtoErrorStatus.success().title(
         "Application Update").message("Update succeed."));

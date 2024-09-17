@@ -32,7 +32,7 @@ public interface MauiDtoMapper
   public MauiDtoMapper INSTANCE = Mappers.getMapper(MauiDtoMapper.class);
 
   // DtoApplication
-  public DtoApplication mauiApplicationToApplication(
+  public DtoApplication mauiApplicationToDtoApplication(
     MauiApplication mauiApplication);
 
   public List<DtoApplication> mauiApplicationListToDtoApplicationList(
@@ -42,7 +42,7 @@ public interface MauiDtoMapper
   public DtoApplicationPermission mauiApplicationPermissionToDtoApplicationPermission(
     MauiApplicationPermission mauiApplicationPermission);
 
-  public List<DtoApplicationPermission> mauiApplicationPermissionToApplicationPermissionList(
+  public List<DtoApplicationPermission> mauiApplicationPermissionToDtoApplicationPermissionList(
     List<MauiApplicationPermission> mauiApplicationPermission);
 
   // DtoClient
@@ -51,18 +51,18 @@ public interface MauiDtoMapper
   public List<DtoClient> mauiClientToClientList(List<MauiClient> mauiClient);
 
   // DtoPerson
-  public DtoPerson mauiPersonToPerson(MauiPerson mauiPerson);
+  public DtoPerson mauiPersonToDtoPerson(MauiPerson mauiPerson);
 
-  public List<DtoPerson> mauiPersonListToPersonList(List<MauiPerson> mauiPersonList);
+  public List<DtoPerson> mauiPersonListToDtoPersonList(List<MauiPerson> mauiPersonList);
 
   // DtoTopic
-  public DtoTopic mauiTopicToTopic(MauiTopic mauiTopic);
+  public DtoTopic mauiTopicToDtoTopic(MauiTopic mauiTopic);
 
-  public List<DtoTopic> mauiTopicToTopicList(List<MauiTopic> mauiTopic);
+  public List<DtoTopic> mauiTopicToDtoTopicList(List<MauiTopic> mauiTopic);
 
   // DtoTopicPermission
-  public DtoTopicPermission mauiTopicPermissionToTopicPermission(MauiTopicPermission mauiTopicPermission);
+  public DtoTopicPermission mauiTopicPermissionToDtoTopicPermission(MauiTopicPermission mauiTopicPermission);
 
-  public List<DtoTopicPermission> mauiTopicPermissionToTopicPermissionList(
+  public List<DtoTopicPermission> mauiTopicPermissionToDtoTopicPermissionList(
     List<DtoTopicPermission> mauiTopicPermission);
 }

@@ -52,7 +52,7 @@ public class ApiAdminPersonController
   public List<DtoPerson> adminFindAll()
   {
     log.debug("adminFindAll()");
-    return MauiDtoMapper.INSTANCE.mauiPersonListToPersonList(personsRepository.findAll());
+    return MauiDtoMapper.INSTANCE.mauiPersonListToDtoPersonList(personsRepository.findAll());
   }
 
   @DeleteMapping("/{id}")

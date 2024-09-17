@@ -115,7 +115,7 @@
       <div th:if="${mauiOwnerOrManager}" th:remove="tags">
         <h2 style="margin-top: 1em;">
           <a class="btn btn-dark" 
-             th:href="@{/}" th:if="${mauiOwner}">
+             th:href="@{/maui-api/persons}" target="_blank" th:if="${mauiOwner}">
             <span class="mdi mdi-plus-thick"></span>
           </a>  
           <span th:text="#{coworker}" th:remove="tags">coworker</span>
@@ -127,6 +127,7 @@
               <th><span th:text="#{lastname}" th:remove="tags">lastname</span></th>
               <th><span th:text="#{email}" th:remove="tags">email</span></th>
               <th><span th:text="#{access}" th:remove="tags">access</span></th>
+              <th width="1%">&nbsp;</th>
             </tr>
           </thead>
           <tbody>
@@ -144,6 +145,14 @@
                   </select>
                 </form>
               </td>
+              <td>
+                <div th:if="${mauiOwner == true && entry.person.id != mauiOwnPerson.id}">
+                  <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deletePersonPermissionModal"
+                          th:attr="data-id=${entry.id}, data-firstname=${entry.person.firstname}, data-lastname=${entry.person.lastname}, data-email=${entry.person.email}">
+                    <i class="mdi mdi-delete"></i>
+                  </button>
+                </div>
+              <td>
             </tr>
           </tbody>
         </table>
@@ -151,7 +160,6 @@
     </div>
 
     <!-- START: create topic dialog -->
-
     <div class="modal fade" id="createTopicModal" tabindex="-1" aria-labelledby="createTopicModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -191,6 +199,26 @@
     </div>
     <!-- END: Toast Message -->
 
+
+    <div class="modal fade" id="deletePersonPermissionModal" tabindex="-1" aria-labelledby="deletePersonPermissionModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deletePersonPermissionModalLabel">Delete Person permissions</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" id="deletePersonPermissionContent">Wirklich löschen?</div>
+          <form th:action="@{/application/delete}" th:object="${mauiApplication}" th:method="POST">
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-danger">Delete</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+
     <div th:replace="~{fragments::mauiFooter}"></div>
 
     <script th:if="${mauiOwnerOrManager}">
@@ -215,6 +243,27 @@
         bootstrap.Toast.getOrCreateInstance(document.getElementById('liveToast')).show();
       </script>
     </div>
+
+    <script th:if="${mauiOwner}">
+      var deleteModal = document.getElementById('deletePersonPermissionModal');
+
+      deleteModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        var applicationPermissionsId = button.getAttribute('data-id');
+        var personFirstname = button.getAttribute('data-firstname');
+        var personLastname = button.getAttribute('data-lastname');
+        var personEmail = button.getAttribute('data-email');
+
+        console.log("id=" + applicationPermissionsId);
+        console.log("personFirstname=" + personFirstname);
+        console.log("personLastname=" + personLastname);
+        console.log("personEmail=" + personEmail);
+
+        var modalContent = document.getElementById('deletePersonPermissionContent');
+
+        modalContent.textContent = 'Möchtest du die Berechtigung für "' + personFirstname + " " + personLastname + '" wirklich löschen?';
+      });
+    </script>
 
   </body>
 </html>

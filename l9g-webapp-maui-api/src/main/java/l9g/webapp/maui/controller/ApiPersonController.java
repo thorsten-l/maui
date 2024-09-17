@@ -48,7 +48,7 @@ public class ApiPersonController
   {
     log.debug("findAll()");
 
-    return MauiDtoMapper.INSTANCE.mauiPersonListToPersonList(personsRepository.findAll());
+    return MauiDtoMapper.INSTANCE.mauiPersonListToDtoPersonList(personsRepository.findAll());
   }
 
   private final MauiPersonsRepository personsRepository;
